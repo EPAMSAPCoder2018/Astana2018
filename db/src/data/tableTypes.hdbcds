@@ -1,0 +1,7 @@
+context tableTypes {
+    table type StageInfo {
+        stageId : Integer;
+        geoFrom : String(50);
+        geoTo   : String(50);
+    }
+};

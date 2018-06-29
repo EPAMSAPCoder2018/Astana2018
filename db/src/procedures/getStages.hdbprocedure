@@ -1,0 +1,11 @@
+PROCEDURE "getStages" ( IN OrderID INTEGER, OUT result "tableTypes.StageInfo" )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   READS SQL DATA AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+   result = SELECT "stageId", "geoFrom".ST_AsGeoJSON() as "geoFrom", "geoTo".ST_AsGeoJSON() as "geoTo" FROM "main.Stages"
+			WHERE "orderId" = :OrderID  ORDER BY 1;
+END

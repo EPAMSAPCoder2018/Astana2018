@@ -1,0 +1,97 @@
+{
+    "format_version": 1,
+    "imports": [
+    {
+            "target_table": "crm.Requests",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "Requests.csv",
+                "has_header": true,
+                "dialect": "HANA",
+				"type_config": {
+						"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "requestDate",
+					"requestStatus"
+                    ]
+            },
+            "column_mappings": {
+            		"requestDate": 1,
+					"requestStatus": 2
+            }
+        },
+        {
+            "target_table": "crm.Customers",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "Customers.csv",
+                "has_header": true,
+                "dialect": "HANA",
+				"type_config": {
+						"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "custName",
+					"custSurName",
+					"phone",
+					"address"
+                    ]
+            },
+            "column_mappings": {
+            		"custName": 1,
+					"custSurName": 2,
+					"phone": 3,
+					"address": 4
+            }
+        },
+        {
+            "target_table": "crm.Details",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "Details.csv",
+                "has_header": true,
+                "dialect": "HANA",
+				"type_config": {
+						"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "problem",
+					"description"
+                    ]
+            },
+            "column_mappings": {
+            		"problem": 1,
+					"description": 2
+            }
+        },
+        {
+            "target_table": "crm.Points",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "Points.csv",
+                "has_header": true,
+                "dialect": "HANA",
+				"type_config": {
+						"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "longtitude",
+					"latitude"
+                    ]
+            },
+            "column_mappings": {
+            		"longtitude": 2,
+					"latitude": 1
+            }
+        }
+    ]
+}

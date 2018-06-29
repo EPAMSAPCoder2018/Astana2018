@@ -1,0 +1,133 @@
+@OData.publish : true
+context main {
+    entity Orders {
+        key orderId   : Integer generated always as identity(start with 1000000000 increment by 1 no minvalue maxvalue 1999999998 no cache no cycle);
+            Stage     : association[0..*] to Stages             on Stage.orderId = orderId;
+            //Car       : association[0..1] to Cars { carId };
+            //Driver    : association[0..1] to Drivers { driverId };
+            status    : association[0..1] to Status { status };
+            orderDate : UTCTimestamp;
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Stages {
+        key orderId     : Integer;
+        key stageId     : Integer generated always as identity(start with 200000000 increment by 1 no minvalue maxvalue 299999999 no cache no cycle);
+            ToOrder     : association[1]    to Orders             on ToOrder.orderId = orderId;
+            Vector      : association[0..*] to Vectors            on Vector.stageId = stageId;
+            status      : association[0..1] to Status { status };
+            geoFrom     : hana.ST_POINT;
+            geoFromName : String(100);
+            geoTo       : hana.ST_POINT;
+            geoToName   : String(100);
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Vectors {
+        key stageId     : Integer;
+        key vectorId    : Integer generated always as identity(start with 300000000 increment by 1 no minvalue maxvalue 399999998 no cache no cycle);
+            ToStage     : association[1] to Stages on ToStage.stageId = stageId;
+            coordinates : hana.ST_GEOMETRY;
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Drivers {
+        key driverId : Integer generated always as identity(start with 400000000 increment by 1 no minvalue maxvalue 499999998 no cache no cycle);
+            status   : association[0..1] to Status { status };
+            fName    : String(50);
+            sName    : String(50);
+            phone    : Integer;
+            photo    : LargeBinary;
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Car {
+        key carId    : String(50);
+            status   : association[0..1] to Status { status };
+            licPlate : String(7);
+            carName  : String(50);
+            carModel : String(50);
+            VIN      : String(20);
+            avgSpeed : Decimal(5, 2);
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity OrdersToCars {
+        key orderToCarId : Integer generated always as identity(start with 700000000 increment by 1 no minvalue maxvalue 799999998 no cache no cycle);
+            orderId      : Integer;
+            carId        : String(50);
+            driverId     : Integer;
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Cars {
+        key carId    : Integer generated always as identity(start with 500000000 increment by 1 no minvalue maxvalue 599999998 no cache no cycle);
+            status   : association[0..1] to Status { status };
+            licPlate : String(7);
+            model    : String(50);
+            VIN      : String(16);
+            avgSpeed : Decimal(5, 2);
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Status {
+        key status     : String(1);
+            statusName : String(50);
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity deviceToCar {
+        key deviceToCarId : Integer generated always as identity(start with 600000000 increment by 1 no minvalue maxvalue 699999998 no cache no cycle);
+            carId         : Integer;
+            deviceId      : String(255);
+    }
+    technical configuration {
+        column store;
+    };
+
+    define view Roads as
+        select from Orders
+        mixin
+        {
+            toStages : association [ 0.. * ] to Stages on
+                toStages.orderId = Orders.orderId;
+        }
+        into
+        {
+            Orders.orderId   as OrderId,
+            Orders.orderDate as OrderDate,
+            toStages.stageId as StageId
+        };
+
+    define view Routes as
+        select from Orders
+        {
+            Orders.orderId              as OrderId,
+            Orders.orderDate            as OrderDate,
+            Orders.Stage.stageId        as StageId,
+            Orders.Stage.geoFrom.st_x() as FromPointX,
+            Orders.Stage.geoFrom.st_y() as FromPointY,
+            Orders.Stage.geoFromName    as FromName,
+            Orders.Stage.geoTo.st_x()   as ToPointX,
+            Orders.Stage.geoTo.st_y()   as ToPointY,
+            Orders.Stage.geoToName      as ToName
+/*Orders.Stage.Vector.coordinates as Coordinates,*/
+
+        };
+};

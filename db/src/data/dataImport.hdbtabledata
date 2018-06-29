@@ -1,0 +1,79 @@
+{
+    "format_version": 1,
+    "imports": [
+    {
+            "target_table": "main.Orders",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "orders.csv",
+                "has_header": false,
+                "dialect": "HANA",
+				"type_config": {
+						"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "orderDate",
+                    "status.status"
+                    ]
+            },
+            "column_mappings": {
+            		"orderDate": 2,
+                    "status.status": 3
+            }
+        },
+        {
+            "target_table": "main.Stages",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "stages.csv",
+                "has_header": false,
+                "dialect": "HANA",
+				"type_config": {
+						"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "orderId",
+					"status.status",
+					"geoFrom",  
+					"geoFromName",
+					"geoTo",
+					"geoToName"
+                    ]
+            },
+            "column_mappings": {
+            		"orderId": 1,
+                    "status.status": 3,
+                    "geoFrom": 4,  
+					"geoFromName": 5,
+					"geoTo": 6,
+					"geoToName": 7
+            }
+        },
+        {
+            "target_table": "main.Vectors",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "vectors.csv",
+                "has_header": false,
+                "dialect": "HANA",
+				"type_config": {
+						"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "stageId",
+					"coordinates"
+                    ]
+            },
+            "column_mappings": {
+            		"stageId": 1,
+                    "coordinates": 3
+            }
+        }
+    ]
+}

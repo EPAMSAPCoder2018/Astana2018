@@ -1,0 +1,39 @@
+context crm {
+    entity Requests {
+        key requestId     : Integer generated always as identity(start with 1 increment by 1 no minvalue maxvalue 10000 no cache no cycle);
+            requestDate   : UTCTimestamp;
+            requestStatus : String(20);
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Points {
+        key pointId    : Integer generated always as identity(start with 30001 increment by 1 no minvalue maxvalue 40000 no cache no cycle);
+            longtitude : Double;
+            latitude   : Double;
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Customers {
+        key customerId  : Integer generated always as identity(start with 10001 increment by 1 no minvalue maxvalue 20000 no cache no cycle);
+            custName    : String(50);
+            custSurName : String(50);
+            phone       : String(50);
+            address     : String(200);
+    }
+    technical configuration {
+        column store;
+    };
+
+    entity Details {
+        key detailId    : Integer generated always as identity(start with 20001 increment by 1 no minvalue maxvalue 30000 no cache no cycle);
+            problem     : String(50);
+            description : String(300);
+    }
+    technical configuration {
+        column store;
+    };
+};

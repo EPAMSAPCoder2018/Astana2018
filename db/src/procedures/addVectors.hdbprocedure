@@ -1,0 +1,7 @@
+PROCEDURE "addVectors" (IN vectors Table("stageId" INTEGER, "vector" NCLOB))
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN
+   INSERT INTO "main.Vectors"("stageId", "coordinates") SELECT "stageId", new ST_MULTIPOINT("vector") FROM :vectors;
+END

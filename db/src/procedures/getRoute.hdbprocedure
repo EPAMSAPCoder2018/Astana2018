@@ -1,0 +1,18 @@
+PROCEDURE "getRoute" (
+	IN STAGES TABLE(
+		STAGEID INTEGER
+	),
+	OUT ROUTE Table(
+		Vector NVARCHAR(50000)
+	)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   READS SQL DATA AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+   ROUTE = Select "coordinates".ST_AsGeoJSON() as Vector from "main.Vectors" where "stageId" in ( select "STAGEID" from :STAGES);
+   
+END

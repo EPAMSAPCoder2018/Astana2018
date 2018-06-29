@@ -1,0 +1,12 @@
+service {
+	"main.Orders" as "Orders" navigates ("toStages" as "Stages", "toDrivers" as "Drivers", "toCars" as "Cars");
+	"main.Stages" as "Stages" without("geoFrom", "geoTo") navigates ("toVectors" as "Vectors");
+	"main.Vectors" as "Vectors" without("coordinates");
+	"main.Drivers" as "Drivers";
+	"main.Cars" as "Cars";
+		association "toStages" principal "Orders"("orderId") multiplicity "1" dependent "Stages"("orderId") multiplicity "*";
+		association "toVectors" principal "Stages"("stageId") multiplicity "1" dependent "Vectors"("stageId") multiplicity "*";
+		
+		association "toDrivers" principal "Orders"("Driver.driverId") multiplicity "1" dependent "Drivers"("driverId") multiplicity "1";
+		association "toCars" principal "Orders"("Car.carId") multiplicity "1" dependent "Cars"("carId") multiplicity "1";
+}
