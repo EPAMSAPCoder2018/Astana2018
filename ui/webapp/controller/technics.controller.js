@@ -1,52 +1,125 @@
 sap.ui.define([
-		"com/epam/ui/controller/base.controller"
-	], function(BaseController) {
+	"com/epam/ui/controller/base.controller",
+	"sap/ui/model/json/JSONModel"
+], function(BaseController, JSONModel) {
 	"use strict";
 	return BaseController.extend("com.epam.ui.controller.technics", {
-		onInit : function (){
+		onInit: function() {
 			BaseController.prototype.onInit.apply(this, arguments);
 			var oMap = this.getMapControl();
-			$.ajax({
-	            type : "GET",
-	            url : "/services/getCarsCurrentPositions.xsjs",
-	            async: false, 
-	            success : function(data,textStatus, jqXHR) {
-	                alert("success to post");
-	            },
-	            error : function(data,textStatus, jqXHR) {
-	                alert("error to post " + textStatus);
-	            }
-	        });
-	        $.ajax({
-	            type : "GET",
-	            url : "/servicesx/getCarsCurrentPositions.xsjs",
-	            async: false, 
-	            success : function(data,textStatus, jqXHR) {
-	                alert("success 2to post");
-	            },
-	            error : function(data,textStatus, jqXHR) {
-	                alert("error 2to post " + textStatus);
-	            }
-	        });
-			oMap.addAggregation("vos",
-				new sap.ui.vbm.Routes({ 
-		         items : [ 
-		            new sap.ui.vbm.Route({ 
-		               position: '27.627530000000004;53.90757000000001;0;27.628280000000004;53.90757000000001;0;27.62826;53.908460000000005;0;27.628280000000004;53.908930000000005;0;27.628310000000003;53.909090000000006;0;27.63125;53.90823;0;27.63088;53.90782;0;27.63069;53.907650000000004;0;27.630290000000002;53.907430000000005;0;27.630190000000002;53.90739000000001;0;27.630100000000002;53.907340000000005;0;27.629920000000002;53.90719000000001;0;27.62986;53.90701000000001;0;27.629920000000002;53.90683000000001;0;27.630090000000003;53.906670000000005;0;27.63022;53.90663000000001;0;27.630360000000003;53.906600000000005;0;27.63071;53.906600000000005;0;27.631030000000003;53.90668;0;27.631280000000004;53.90682;0;27.63136;53.90691;0;27.631400000000003;53.90701000000001;0;27.631400000000003;53.90708000000001;0;27.631380000000004;53.907140000000005;0', 
-		               start: "0", 
-		               end: "0",
-		               color: 'rgb(0, 255, 0)', 
-		               tooltip: 'To Library' 
-		            }),
-		            new sap.ui.vbm.Route({ 
-		               position: '27.631380000000004;53.907140000000005;0;27.631290000000003;53.90726000000001;0;27.631210000000003;53.907700000000006;0;27.631220000000003;53.90784000000001;0;27.63126;53.90793000000001;0;27.63136;53.90807;0;27.632330000000003;53.90919;0;27.633390000000002;53.91039000000001;0;27.633730000000003;53.91077000000001;0;27.634670000000003;53.911880000000004;0;27.635040000000004;53.912400000000005;0;27.63558;53.913340000000005;0;27.635880000000004;53.913990000000005;0;27.636100000000003;53.914680000000004;0;27.636170000000003;53.915060000000004;0;27.636370000000003;53.916740000000004;0;27.636450000000004;53.91760000000001;0;27.636570000000003;53.918330000000005;0;27.63669;53.91881000000001;0;27.6368;53.91915;0;27.637100000000004;53.919970000000006;0;27.63764;53.92134000000001;0;27.6385;53.923590000000004;0;27.63877;53.924310000000006;0;27.63933;53.925810000000006;0;27.639480000000002;53.92633000000001;0;27.639630000000004;53.92703;0;27.6397;53.927580000000006;0;27.639730000000004;53.92826;0;27.640110000000004;53.92830000000001;0;27.640980000000003;53.92848000000001;0;27.64112;53.928540000000005;0;27.641260000000003;53.92862;0;27.6414;53.928720000000006;0;27.641540000000003;53.928790000000006;0;27.64176;53.928850000000004;0;27.641880000000004;53.92886000000001;0;27.64215;53.92884;0;27.64232;53.928810000000006;0;27.642450000000004;53.92882;0;27.64253;53.928830000000005;0;27.643480000000004;53.9286;0;27.64572;53.92812000000001;0;27.647980000000004;53.927670000000006;0;27.648480000000003;53.927580000000006;0;27.649350000000002;53.92746;0;27.650170000000003;53.92737;0;27.65023;53.92756000000001;0;27.650460000000002;53.92812000000001;0;27.65051;53.928290000000004;0;27.650570000000002;53.928670000000004;0;27.650540000000003;53.92887;0;27.65048;53.929120000000005;0;27.65041;53.929280000000006;0;27.650290000000002;53.929480000000005;0;27.650180000000002;53.92965;0;27.64992;53.92992;0;27.64964;53.93012;0;27.64918;53.9303;0;27.648690000000002;53.930440000000004;0;27.648170000000004;53.9305;0;27.647740000000002;53.930510000000005;0;27.6472;53.93048;0;27.64656;53.93037;0;27.6461;53.93034;0;27.64572;53.93036000000001;0;27.645580000000002;53.93038000000001;0', 
-		               start: "0", 
-		               end: "0",
-		               color: 'rgb(255, 0, 0)', 
-		               tooltip: 'To Library' 
-		            })
-			  ]})
-			);
+			var oModel = new JSONModel({
+				spots: [],
+				routes: [],
+				areas: [],
+				//	centerPosition : "0:0",
+				initialZoom: 2
+			});
+			oMap.setModel(oModel, "mapData");
+			// $.ajax({
+			// 	type: "GET",
+			// 	url: "/services/getCarsCurrentPositions.xsjs",
+			// 	async: false,
+			// 	success: function(data, textStatus, jqXHR) {
+			var data = {
+				"results": [{
+					"carId": "54463d412cb4e449",
+					"status.status": "A",
+					"licPlate": "",
+					"carName": "MAZ",
+					"carModel": "5449",
+					"VIN": "VIN54463d412cb4e449",
+					"avgSpeed": "30.00",
+					"location": "27.633762;53.916788;0"
+				}, {
+					"carId": "2",
+					"status.status": "A",
+					"licPlate": "",
+					"carName": "MAZ",
+					"carModel": "5449",
+					"VIN": "VIN54463d412cb4e449",
+					"avgSpeed": "30.00",
+					"location": "27.633805;53.905472;0"
+				}, {
+					"carId": "3",
+					"status.status": "D",
+					"licPlate": "",
+					"carName": "MAZ",
+					"carModel": "5449",
+					"VIN": "VIN54463d412cb4e449",
+					"avgSpeed": "30.00",
+					"location": "27.634979;53.912372;0"
+				}, {
+					"carId": "1",
+					"status.status": "N",
+					"licPlate": "",
+					"carName": "MAZ",
+					"carModel": "5449",
+					"VIN": "VIN54463d412cb4e449",
+					"avgSpeed": "30.00",
+					"location": "27.584679;53.916326;0"
+				}]
+			};
+			var statuses = {
+				N: "Warning",
+				A: "Success",
+				D: "Error"
+			};
+			data.results.forEach(function(spot, index) {
+				spot.index = index + 1;
+				spot.status = statuses[spot["status.status"]];
+			});
+			oModel.setProperty("/spots", data.results);
+			//	oModel.setProperty("/centerPosition","53.916326;27.584679");
+			// oModel.setProperty("/zoomlevel",9);
+			// 	},
+			// 	error: function(data, textStatus, jqXHR) {
+			// 		alert("error to post " + textStatus);
+			// 	}
+			// });
+		},
+
+		onLegendItemClick: function(evt) {
+			var oMap = this.getMapControl();
+			var car = evt.getSource().getBindingContext("mapData").getProperty();
+			oMap.setCenterPosition(car.location.replace(";0", ""));
+			oMap.setZoomlevel(15);
+		},
+
+		onFiltersChanged: function(evt) {
+			var oMap = this.getMapControl();
+			var oMapLegend = this.getMapLegend();
+			var binding = oMap.getAggregation("vos")[0].getBinding("items");
+			var key = evt.getParameters().selectedItem.getKey();
+			if (key === "All") {
+				oMapLegend.getBinding("items").filter([]);
+				binding.filter([]);
+			} else {
+				var oFilterStatus = new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, key);
+				oMapLegend.getBinding("items").filter([oFilterStatus]);
+				binding.filter([oFilterStatus]);
+			}
+		},
+
+		getMapLegend: function() {
+			return this.getView().byId("technicsLegend");
+		},
+
+		//var oPanel = null;
+		onCloseDetail: function(evt) {
+			//alert("onCloseDetail" + this);
+		},
+		
+		onSpotClickItem : function(evt){
+			evt.getSource().openDetailWindow("Car Details", "0", "0" );   
+		},
+
+		onOpenDetail: function(evt) {
+			var cont = document.getElementById(evt.getParameter("contentarea").id);
+			cont.innerHTML = "<ul>" +
+			  "<li><b>Car Id : </b> 123</li>" + 
+			  "<li><b>VIN : </b> VIN 123</li>" + 
+			  "</ul>";
+			cont.style.color = "Blue";
 		}
 	});
 });

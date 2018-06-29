@@ -17,6 +17,26 @@ sap.ui.define([
 				selectedTabKey : "technics" // possible values technics and routes
 			});
 			return oModel;
+		},
+		
+		createTechnicFiltersModel: function() {
+			var oModel = new JSONModel({
+				selectedKey : "All",
+				items : [{
+					name : "All",
+					key : "All"
+				},{
+					name : "Active",
+					key : "Success"
+				},{
+					name : "Not Active",
+					key : "Warning"
+				},{
+					name : "Broken",
+					key : "Error"
+				}]
+			});
+			return oModel;
 		}
 
 	};

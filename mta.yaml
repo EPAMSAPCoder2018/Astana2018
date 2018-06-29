@@ -1,63 +1,64 @@
 ID: AstanaApp
 _schema-version: '2.1'
 version: 0.0.1
-
 modules:
- - name: xs
-   type: nodejs
-   path: xs
-   parameters:
+  - name: xs
+    type: nodejs
+    path: xs
+    parameters:
       disk-quota: 512M
       memory: 512M
-   provides:
-    - name: xs_api
-      properties:
-         url: ${default-url}
-   requires:
-    - name: hdi_db
-
- - name: ui
-   type: html5
-   path: ui
-   parameters:
+    provides:
+      - name: xs_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: hdi_db
+  - name: ui
+    type: html5
+    path: ui
+    parameters:
       disk-quota: 512M
       memory: 256M
-   build-parameters:
+    build-parameters:
       builder: grunt
-   requires:
-    - name: uaa_AstanaApp
-    - name: dest_AstanaApp
-    - name: xs_api
-      group: destinations
-      properties:
-         name: xs_api
-         url: ~{url}
-
- - name: db
-   type: hdb
-   path: db
-   parameters:
+    requires:
+      - name: uaa_AstanaApp
+      - name: dest_AstanaApp
+      - name: xs_api
+        group: destinations
+        properties:
+          name: xs_api
+          url: '~{url}'
+      - name: ui5-lib
+        properties:
+          ui5liburl: '~{url}'
+  - name: db
+    type: hdb
+    path: db
+    parameters:
       disk-quota: 512M
       memory: 512M
-   requires:
-    - name: hdi_db
-
+    requires:
+      - name: hdi_db
 resources:
- - name: uaa_AstanaApp
-   parameters:
+  - name: uaa_AstanaApp
+    parameters:
       path: ./xs-security.json
       service-plan: application
-   type: com.sap.xs.uaa
-
- - name: dest_AstanaApp
-   parameters:
+    type: com.sap.xs.uaa
+  - name: dest_AstanaApp
+    parameters:
       service-plan: lite
       service: destination
-   type: org.cloudfoundry.managed-service
-
-
- - name: hdi_db
-   properties:
-      hdi-container-name: ${service-name}
-   type: com.sap.xs.hdi-container
-
+    type: org.cloudfoundry.managed-service
+  - name: hdi_db
+    properties:
+      hdi-container-name: '${service-name}'
+    type: com.sap.xs.hdi-container
+  - name: ui5-lib
+    type: configuration 
+    parameters:
+      ID: com.sap.ui5.dist.sapui5-dist-xsa.XSAC_SAPUI5_FESV4:sapui5_fesv4 # Specifies the the ID of the provider MTA.
+      name: sapui5_fesv4
+      version: ">1.50.2"
