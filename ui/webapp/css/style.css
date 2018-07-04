@@ -1,1 +1,7 @@
 /* Enter your custom styles here */
+.vbi-detail{
+	padding: 0.4375rem !important;
+}
+.vbi-detail .vbi-detail-title{
+	padding: 0 1.5rem 1rem 0 !important;
+}

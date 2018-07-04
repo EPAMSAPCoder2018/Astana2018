@@ -33,6 +33,10 @@ sap.ui.define([
 
 		onLegendItemClick : function(evt){
 			
+		},
+		
+		onZoomChanged : function(evt){
+			
 		}
 	});
 });

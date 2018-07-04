@@ -25,8 +25,6 @@ sap.ui.define([
 
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
-			this.setModel(models.createTabHandlerModel(), "tabHandlerModel");
-			this.setModel(models.createTechnicFiltersModel(), "technicsFiltersModel");
 		}
 	});
 });

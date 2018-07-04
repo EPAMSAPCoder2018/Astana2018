@@ -37,6 +37,17 @@ sap.ui.define([
 				}]
 			});
 			return oModel;
+		},
+		
+		createMapDataModel : function(){
+			var oModel = new JSONModel({
+				spots: [],
+				routes: [],
+				areas: [],
+				centerPosition : "27.554899;53.904651",
+				initialZoom: 7
+			});
+			return oModel;
 		}
 
 	};
