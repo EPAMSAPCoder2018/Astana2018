@@ -14,7 +14,7 @@ sap.ui.define([
 		
 		createTabHandlerModel: function() {
 			var oModel = new JSONModel({
-				selectedTabKey : "technics" // possible values technics and routes
+				selectedTabKey : "technics" // possible values technics and routes and requests
 			});
 			return oModel;
 		},
@@ -55,6 +55,18 @@ sap.ui.define([
 					name : "Open",
 					key : "Error"
 				}]
+			});
+			return oModel;
+		},
+
+		
+		createMapDataModel : function(){
+			var oModel = new JSONModel({
+				spots: [],
+				routes: [],
+				areas: [],
+				centerPosition : "27.554899;53.904651",
+				initialZoom: 7
 			});
 			return oModel;
 		}

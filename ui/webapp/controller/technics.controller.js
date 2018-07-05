@@ -1,20 +1,16 @@
 sap.ui.define([
 	"com/epam/ui/controller/base.controller",
-	"sap/ui/model/json/JSONModel"
-], function(BaseController, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	'sap/m/Text',
+	"com/epam/ui/model/models"
+], function(BaseController, JSONModel, Text, Models) {
 	"use strict";
 	return BaseController.extend("com.epam.ui.controller.technics", {
 		onInit: function() {
 			BaseController.prototype.onInit.apply(this, arguments);
-			var oMap = this.getMapControl();
-			var oModel = new JSONModel({
-				spots: [],
-				routes: [],
-				areas: [],
-				//	centerPosition : "0:0",
-				initialZoom: 2
-			});
-			oMap.setModel(oModel, "mapData");
+			this.getView().setModel(Models.createTechnicFiltersModel(), "technicsFiltersModel");
+			var mapDataModel = Models.createMapDataModel();
+			this.getView().setModel(mapDataModel, "mapData");
 			// $.ajax({
 			// 	type: "GET",
 			// 	url: "/services/getCarsCurrentPositions.xsjs",
@@ -68,7 +64,7 @@ sap.ui.define([
 				spot.index = index + 1;
 				spot.status = statuses[spot["status.status"]];
 			});
-			oModel.setProperty("/spots", data.results);
+			mapDataModel.setProperty("/spots", data.results);
 			//	oModel.setProperty("/centerPosition","53.916326;27.584679");
 			// oModel.setProperty("/zoomlevel",9);
 			// 	},
@@ -76,6 +72,20 @@ sap.ui.define([
 			// 		alert("error to post " + textStatus);
 			// 	}
 			// });
+		},
+		
+		onAfterRendering : function(){
+			var oMap = this.getMapControl();
+			if (!this._spotDetailPointer) {
+				var textView = new Text(this.createId("SpotDetailPointer"));
+				var contentId = oMap.getId() + "-geoscene-winlayer";
+				var cont = document.getElementById(contentId);
+				var rm = sap.ui.getCore().createRenderManager();
+				rm.renderControl(textView);
+				rm.flush(cont);
+				rm.destroy();
+				this._spotDetailPointer = textView;
+			}
 		},
 
 		onLegendItemClick: function(evt) {
@@ -90,6 +100,8 @@ sap.ui.define([
 			var oMapLegend = this.getMapLegend();
 			var binding = oMap.getAggregation("vos")[0].getBinding("items");
 			var key = evt.getParameters().selectedItem.getKey();
+			oMap.setCenterPosition("27.554899;53.904651");
+			oMap.setZoomlevel(12);
 			if (key === "All") {
 				oMapLegend.getBinding("items").filter([]);
 				binding.filter([]);
@@ -104,22 +116,45 @@ sap.ui.define([
 			return this.getView().byId("technicsLegend");
 		},
 
-		//var oPanel = null;
-		onCloseDetail: function(evt) {
-			//alert("onCloseDetail" + this);
+		onZoomChanged : function(evt){
+			if (this._oPopover) {
+				this._oPopover.close();
+			}
 		},
 		
 		onSpotClickItem : function(evt){
-			evt.getSource().openDetailWindow("Car Details", "0", "0" );   
+			var that = this;
+			var pos = {};
+			var position = evt.getParameters().data.Action.Params.Param.forEach(function(param){
+				pos[param.name] = param["#"];
+			});
+			var marker = document.getElementById(that.getView().byId("SpotDetailPointer").getId());
+			marker.style.position = "absolute";
+			marker.style.width = "1px";
+			marker.style.left = pos.x + "px";
+			marker.style.top = pos.y + "px";
+			var oMap = this.getMapControl();
+			if (!that._oPopover) {
+				that._oPopover = sap.ui.xmlfragment("com.epam.ui.view.fragment.carDetails", that);
+				that.getView().addDependent(that._oPopover);
+			}
+			that._oPopover.bindElement({path: evt.getSource().getBindingContext("mapData").getPath(), model: "mapData"});
+			that._oPopover.setPlacement("PreferredRightOrFlip");
+		
+			setTimeout(function(){
+				that._oPopover.openBy(that._spotDetailPointer);
+			},1);
 		},
 
-		onOpenDetail: function(evt) {
-			var cont = document.getElementById(evt.getParameter("contentarea").id);
-			cont.innerHTML = "<ul>" +
-			  "<li><b>Car Id : </b> 123</li>" + 
-			  "<li><b>VIN : </b> VIN 123</li>" + 
-			  "</ul>";
-			cont.style.color = "Blue";
+		onExit : function () {
+			if (this._oPopover) {
+				this._oPopover.destroy();
+			}
+		},
+
+		handleEmailPress: function (oEvent) {
+			this._oPopover.close();
+			MessageToast.show("E-Mail has been sent");
 		}
 	});
 });

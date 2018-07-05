@@ -5,6 +5,7 @@ sap.ui.define([
 	"use strict";
 	return Controller.extend("com.epam.ui.controller.main", {
 		onInit : function (){
+			this.getView().setModel(Models.createTabHandlerModel(), "tabHandlerModel");
 		},
 		onAfterRendering : function(){
 			

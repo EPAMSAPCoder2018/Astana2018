@@ -1,11 +1,15 @@
 sap.ui.define([
 	"com/epam/ui/controller/base.controller",
-	"sap/ui/model/json/JSONModel"
-], function(BaseController, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"com/epam/ui/model/models"
+], function (BaseController, JSONModel, Models) {
 	"use strict";
 	return BaseController.extend("com.epam.ui.controller.technics", {
-		onInit: function() {
+		onInit: function () {
 			BaseController.prototype.onInit.apply(this, arguments);
+			this.getView().setModel(Models.createRequestFiltersModel(), "requestsFiltersModel");
+
+			var mapDataModel = Models.createMapDataModel();
 			var oMap = this.getMapControl();
 			var oModel = new JSONModel({
 				spots: [],
@@ -79,10 +83,10 @@ sap.ui.define([
 				"In process": "Warning",
 				"Open": "Error"
 			};
-			 data.result.forEach(function(spot, index) {
-			 	spot.index = index + 1;
+			data.result.forEach(function (spot, index) {
+				spot.index = index + 1;
 				spot.status = statuses[spot["requestStatus"]];
-			 });
+			});
 			oModel.setProperty("/spots", data.result);
 			//	oModel.setProperty("/centerPosition","53.916326;27.584679");
 			// oModel.setProperty("/zoomlevel",9);
@@ -93,14 +97,14 @@ sap.ui.define([
 			// });
 		},
 
-		onLegendItemClick: function(evt) {
+		onLegendItemClick: function (evt) {
 			var oMap = this.getMapControl();
 			var crmRequest = evt.getSource().getBindingContext("mapData").getProperty();
 			oMap.setCenterPosition(crmRequest.location.replace("; 0", ""));
 			oMap.setZoomlevel(15);
 		},
 
-		onFiltersChanged: function(evt) {
+		onFiltersChanged: function (evt) {
 			var oMap = this.getMapControl();
 			var oMapLegend = this.getMapLegend();
 			var binding = oMap.getAggregation("vos")[0].getBinding("items");
@@ -117,26 +121,55 @@ sap.ui.define([
 			}
 		},
 
-		getMapLegend: function() {
+		getMapLegend: function () {
 			return this.getView().byId("requestsLegend");
 		},
 
 		//var oPanel = null;
-		onCloseDetail: function(evt) {
+		onCloseDetail: function (evt) {
 			//alert("onCloseDetail" + this);
 		},
-
-		onSpotClickItem: function(evt) {
-			evt.getSource().openDetailWindow("Request details", "1", "1");
+		
+		onAfterRendering : function(){
+			var oMap = this.getMapControl();
+			if (!this._spotDetailPointer) {
+				var textView = new Text(this.createId("SpotDetailPointer"));
+				var contentId = oMap.getId() + "-geoscene-winlayer";
+				var cont = document.getElementById(contentId);
+				var rm = sap.ui.getCore().createRenderManager();
+				rm.renderControl(textView);
+				rm.flush(cont);
+				rm.destroy();
+				this._spotDetailPointer = textView;
+			}
 		},
 
-		onOpenDetail: function(evt) {
-			var cont = document.getElementById(evt.getParameter("contentarea").id);
-			cont.innerHTML = "<ul>" +
-				"<li><b>Car Id : </b> 123</li>" +
-				"<li><b>VIN : </b> VIN 123</li>" +
-				"</ul>";
-			cont.style.color = "Blue";
-		}
+		onSpotClickItem: function (evt) {
+			var that = this;
+			var pos = {};
+			var position = evt.getParameters().data.Action.Params.Param.forEach(function (param) {
+				pos[param.name] = param["#"];
+			});
+			var marker = document.getElementById(that.getView().byId("SpotDetailPointer").getId());
+			marker.style.position = "absolute";
+			marker.style.width = "1px";
+			marker.style.left = pos.x + "px";
+			marker.style.top = pos.y + "px";
+			var oMap = this.getMapControl();
+			if (!that._oPopover) {
+				that._oPopover = sap.ui.xmlfragment("com.epam.ui.view.fragment.requestDetails", that);
+				that.getView().addDependent(that._oPopover);
+			}
+			that._oPopover.bindElement({
+				path: evt.getSource().getBindingContext("mapData").getPath(),
+				model: "mapData"
+			});
+			that._oPopover.setPlacement("PreferredRightOrFlip");
+
+			setTimeout(function () {
+				that._oPopover.openBy(that._spotDetailPointer);
+			}, 1);
+		},
+
 	});
 });

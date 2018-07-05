@@ -1,9 +1,9 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller"
-], function(Controller) {
+], function (Controller) {
 	"use strict";
 	return Controller.extend("com.epam.ui.controller.base", {
-		onInit: function() {
+		onInit: function () {
 			var oMap = this.getMapControl();
 			var oMapConfig = {
 				"MapProvider": [{
@@ -27,12 +27,16 @@ sap.ui.define([
 			oMap.setRefMapLayerStack("DEFAULT");
 		},
 
-		getMapControl: function() {
+		getMapControl: function () {
 			return this.getView().byId("vbi");
 		},
 
-		onLegendItemClick : function(evt){
-			
+		onLegendItemClick: function (evt) {
+
+		},
+
+		onZoomChanged: function (evt) {
+
 		}
 	});
 });

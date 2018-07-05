@@ -1,40 +1,32 @@
-<mvc:View controllerName="com.epam.ui.controller.main" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:vbm="sap.ui.vbm" xmlns:tnt="sap.tnt"
-	xmlns="sap.m" xmlns:viz="sap.viz.ui5.controls"
-	height="100%" displayBlock="true">
+<mvc:View controllerName="com.epam.ui.controller.main" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
+	xmlns:vbm="sap.ui.vbm" xmlns:tnt="sap.tnt" xmlns="sap.m" xmlns:viz="sap.viz.ui5.controls" height="100%" displayBlock="true">
 	<App>
-      <pages>
-         <Page showHeader="false">
-            <content>
-			<tnt:ToolHeader>
-				<Button icon="sap-icon://home" type="Transparent" press="onHomePress">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="NeverOverflow" />
-					</layoutData>
-				</Button>
-				<IconTabHeader id="iconTabHeader"
-					selectedKey="{tabHandlerModel>/selectedTabKey}"
-					select="onSelectTab"
-					showOverflowSelectList="true"
-					backgroundDesign="Transparent"
-					mode="Inline">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="NeverOverflow"	shrinkable="true" />
-					</layoutData>
-					<items>
-						<IconTabFilter key="technics" text="Technics">
-						</IconTabFilter>
-						<IconTabFilter key="routes" text="Routes">
-						</IconTabFilter>
-						<IconTabFilter key="requests" text="Requests">
-						</IconTabFilter>
-					</items>
-				</IconTabHeader>
-			</tnt:ToolHeader>
-      		<mvc:XMLView viewName="com.epam.ui.view.technics" visible="{= ${tabHandlerModel>/selectedTabKey} === 'technics'}"/>
-			<mvc:XMLView viewName="com.epam.ui.view.routes" visible="{= ${tabHandlerModel>/selectedTabKey} === 'routes'}"/>
-			<mvc:XMLView viewName="com.epam.ui.view.requests" visible="{= ${tabHandlerModel>/selectedTabKey} === 'requests'}"/>
-			</content>
-         </Page>
-      </pages>
-   </App>
+		<pages>
+			<Page showHeader="false">
+				<content>
+					<tnt:ToolHeader>
+						<Button icon="sap-icon://home" type="Transparent" press="onHomePress">
+							<layoutData>
+								<OverflowToolbarLayoutData priority="NeverOverflow"/>
+							</layoutData>
+						</Button>
+						<IconTabHeader id="iconTabHeader" selectedKey="{tabHandlerModel>/selectedTabKey}" select="onSelectTab" showOverflowSelectList="true"
+							backgroundDesign="Transparent" mode="Inline">
+							<layoutData>
+								<OverflowToolbarLayoutData priority="NeverOverflow" shrinkable="true"/>
+							</layoutData>
+							<items>
+								<IconTabFilter key="technics" text="Technics"></IconTabFilter>
+								<IconTabFilter key="routes" text="Routes"></IconTabFilter>
+								<IconTabFilter key="requests" text="Requests"></IconTabFilter>
+							</items>
+						</IconTabHeader>
+					</tnt:ToolHeader>
+					<mvc:XMLView viewName="com.epam.ui.view.technics" visible="{= ${tabHandlerModel>/selectedTabKey} === 'technics'}"/>
+					<mvc:XMLView viewName="com.epam.ui.view.routes" visible="{= ${tabHandlerModel>/selectedTabKey} === 'routes'}"/>
+					<mvc:XMLView viewName="com.epam.ui.view.requests" visible="{= ${tabHandlerModel>/selectedTabKey} === 'requests'}"/>
+				</content>
+			</Page>
+		</pages>
+	</App>
 </mvc:View>
