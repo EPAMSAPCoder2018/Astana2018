@@ -25,11 +25,14 @@
 						</IconTabFilter>
 						<IconTabFilter key="routes" text="Routes">
 						</IconTabFilter>
+						<IconTabFilter key="requests" text="Requests">
+						</IconTabFilter>
 					</items>
 				</IconTabHeader>
 			</tnt:ToolHeader>
       		<mvc:XMLView viewName="com.epam.ui.view.technics" visible="{= ${tabHandlerModel>/selectedTabKey} === 'technics'}"/>
 			<mvc:XMLView viewName="com.epam.ui.view.routes" visible="{= ${tabHandlerModel>/selectedTabKey} === 'routes'}"/>
+			<mvc:XMLView viewName="com.epam.ui.view.requests" visible="{= ${tabHandlerModel>/selectedTabKey} === 'requests'}"/>
 			</content>
          </Page>
       </pages>

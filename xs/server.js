@@ -7,7 +7,7 @@ var port  = process.env.PORT || 3000;
 
 var options = {
 	anonymous : true, // remove to authenticate calls
-	redirectUrl : "/index.xsjs"
+	redirectUrl : "/services/index.xsjs"
 };
 
 // configure HANA

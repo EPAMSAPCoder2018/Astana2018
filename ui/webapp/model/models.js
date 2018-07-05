@@ -37,6 +37,26 @@ sap.ui.define([
 				}]
 			});
 			return oModel;
+		},
+		
+		createRequestFiltersModel: function() {
+			var oModel = new JSONModel({
+				selectedKey : "All",
+				items : [{
+					name : "All",
+					key : "All"
+				},{
+					name : "Done",
+					key : "Success"
+				},{
+					name : "In process",
+					key : "Warning"
+				},{
+					name : "Open",
+					key : "Error"
+				}]
+			});
+			return oModel;
 		}
 
 	};
