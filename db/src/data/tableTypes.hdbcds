@@ -4,4 +4,26 @@ context tableTypes {
         geoFrom : String(50);
         geoTo   : String(50);
     }
+    
+    table type OrderInfo {
+        "orderId"   : Integer;
+        "orderStatus": String(1);
+        "orderDate" : UTCTimestamp;
+        "carId"    : String(50);
+        "carStatus": String(1);
+        "licPlate" : String(7);
+        "carName"  : String(50);
+        "carModel" : String(50);
+        "VIN"      : String(20);
+        "avgSpeed" : Decimal(5, 2);
+        "stageId"     : Integer;
+        "stageStatus": String(1);
+        "geoFrom"     : String(200);
+        "geoFromName" : String(100);
+        "geoTo"       :  String(200);
+        "geoToName"   : String(100);
+        "vectorId"    : Integer;
+        "coordinates" : String(5000);
+    }
+
 };

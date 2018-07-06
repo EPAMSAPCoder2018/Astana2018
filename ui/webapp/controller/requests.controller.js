@@ -1,8 +1,8 @@
 sap.ui.define([
 	"com/epam/ui/controller/base.controller",
-	"sap/ui/model/json/JSONModel",
+	'sap/m/Text',
 	"com/epam/ui/model/models"
-], function (BaseController, JSONModel, Models) {
+], function (BaseController, Text, Models) {
 	"use strict";
 	return BaseController.extend("com.epam.ui.controller.technics", {
 		onInit: function () {
@@ -10,15 +10,8 @@ sap.ui.define([
 			this.getView().setModel(Models.createRequestFiltersModel(), "requestsFiltersModel");
 
 			var mapDataModel = Models.createMapDataModel();
+			this.getView().setModel(mapDataModel, "mapData");
 			var oMap = this.getMapControl();
-			var oModel = new JSONModel({
-				spots: [],
-				routes: [],
-				areas: [],
-				//	centerPosition : "0:0",
-				initialZoom: 2
-			});
-			oMap.setModel(oModel, "mapData");
 			// $.ajax({
 			// 	type: "GET",
 			// 	url: "/services/getCustomersRequests.xsjs",
@@ -87,7 +80,7 @@ sap.ui.define([
 				spot.index = index + 1;
 				spot.status = statuses[spot["requestStatus"]];
 			});
-			oModel.setProperty("/spots", data.result);
+			mapDataModel.setProperty("/spots", data.result);
 			//	oModel.setProperty("/centerPosition","53.916326;27.584679");
 			// oModel.setProperty("/zoomlevel",9);
 			// 	},
@@ -121,15 +114,6 @@ sap.ui.define([
 			}
 		},
 
-		getMapLegend: function () {
-			return this.getView().byId("requestsLegend");
-		},
-
-		//var oPanel = null;
-		onCloseDetail: function (evt) {
-			//alert("onCloseDetail" + this);
-		},
-		
 		onAfterRendering : function(){
 			var oMap = this.getMapControl();
 			if (!this._spotDetailPointer) {

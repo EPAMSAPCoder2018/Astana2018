@@ -3,20 +3,16 @@ $.import("config", "properties");
 $.import("utils", "requestUtil");
 $.import("utils", "dbUtil");
 var carId = $.request.parameters.get("carId");
-var requestParameters = {
-	carId: carId
-};
 //https://iots0019634792trial.hanatrial.ondemand.com/iot/xsjs/registerCar.xsjs?carId=54463d412cb4e449
-var iotApiUrl = $.xs.properties.get("iot.apiUrl") + "/registerCar.xsjs";
-var url = $.xs.requestUtil.prepareUrl(iotApiUrl, requestParameters);
-var request = new $.net.http.Request($.net.http.GET, "/");
+var url = $.xs.properties.get("iot.apiUrl") + "/registerCar.xsjs";
+var request = new $.net.http.Request($.net.http.GET, "");
+request.parameters.push({name:"carId",value:carId});
 var client = new $.net.http.Client();
 client.request(request, url);
 var response = client.getResponse();
-var cars = [];
 if (response.body) {
 	car = JSON.parse(response.body.asString());
-	if (cars.isNewlyRegistered) {
+	if (car.isNewlyRegistered) {
 		
 		//{"CARID":"gpsCar","C_LONGITUDE":53.90757000000001,"C_LATITUDE":27.627530000000004,"C_ORDERID":1000000001,"C_TIMESTAMP":"2018-06-27T12:43:16.000Z"}
 		var carParams = [carId, 'A', 'LIC 876', 'MAZ', '5449', 'VIN54463d412cb4e449', '30'];
@@ -31,12 +27,11 @@ if (response.body) {
 		// 	30--/*avgSpeed <DECIMAL>*/
 		// );
 		var statement = 'INSERT INTO "main.Car" VALUES(' + (new Array(carParams.length)).fill('?') + ')';
-		var result = connection.executeQuery.apply(connection, [statement].concat(carParams));
+		var result = connection.executeUpdate.apply(connection, [statement].concat(carParams));
+		connection.commit();
 	}
 	
-	$.xs.requestUtil.prepareResponse({
-		results : car
-	});
+	$.xs.requestUtil.prepareResponse(car);
 }
 //EXAMPLE
 /*{

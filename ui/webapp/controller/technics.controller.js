@@ -1,9 +1,8 @@
 sap.ui.define([
 	"com/epam/ui/controller/base.controller",
-	"sap/ui/model/json/JSONModel",
 	'sap/m/Text',
 	"com/epam/ui/model/models"
-], function(BaseController, JSONModel, Text, Models) {
+], function(BaseController, Text, Models) {
 	"use strict";
 	return BaseController.extend("com.epam.ui.controller.technics", {
 		onInit: function() {
@@ -19,7 +18,7 @@ sap.ui.define([
 			var data = {
 				"results": [{
 					"carId": "54463d412cb4e449",
-					"status.status": "A",
+					"status": "A",
 					"licPlate": "",
 					"carName": "MAZ",
 					"carModel": "5449",
@@ -28,7 +27,7 @@ sap.ui.define([
 					"location": "27.633762;53.916788;0"
 				}, {
 					"carId": "2",
-					"status.status": "A",
+					"status": "A",
 					"licPlate": "",
 					"carName": "MAZ",
 					"carModel": "5449",
@@ -37,7 +36,7 @@ sap.ui.define([
 					"location": "27.633805;53.905472;0"
 				}, {
 					"carId": "3",
-					"status.status": "D",
+					"status": "B",
 					"licPlate": "",
 					"carName": "MAZ",
 					"carModel": "5449",
@@ -46,7 +45,7 @@ sap.ui.define([
 					"location": "27.634979;53.912372;0"
 				}, {
 					"carId": "1",
-					"status.status": "N",
+					"status": "N",
 					"licPlate": "",
 					"carName": "MAZ",
 					"carModel": "5449",
@@ -58,11 +57,11 @@ sap.ui.define([
 			var statuses = {
 				N: "Warning",
 				A: "Success",
-				D: "Error"
+				B: "Error"
 			};
 			data.results.forEach(function(spot, index) {
 				spot.index = index + 1;
-				spot.status = statuses[spot["status.status"]];
+				spot.status = statuses[spot["status"]];
 			});
 			mapDataModel.setProperty("/spots", data.results);
 			//	oModel.setProperty("/centerPosition","53.916326;27.584679");
@@ -110,10 +109,6 @@ sap.ui.define([
 				oMapLegend.getBinding("items").filter([oFilterStatus]);
 				binding.filter([oFilterStatus]);
 			}
-		},
-
-		getMapLegend: function() {
-			return this.getView().byId("technicsLegend");
 		},
 
 		onZoomChanged : function(evt){

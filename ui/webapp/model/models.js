@@ -14,7 +14,27 @@ sap.ui.define([
 		
 		createTabHandlerModel: function() {
 			var oModel = new JSONModel({
-				selectedTabKey : "technics" // possible values technics and routes and requests
+				selectedTabKey : "routes" // possible values technics and routes and requests
+			});
+			return oModel;
+		},
+		
+		createRoutesFiltersModel: function() {
+			var oModel = new JSONModel({
+				selectedKey : "All",
+				items : [{
+					name : "All",
+					key : "All"
+				},{
+					name : "In Process",
+					key : "I"
+				},{
+					name : "Completed",
+					key : "D"
+				},{
+					name : "Planned",
+					key : "P"
+				}]
 			});
 			return oModel;
 		},
@@ -66,7 +86,8 @@ sap.ui.define([
 				routes: [],
 				areas: [],
 				centerPosition : "27.554899;53.904651",
-				initialZoom: 7
+				initialZoom: 7,
+				backButtonVisible : false
 			});
 			return oModel;
 		}

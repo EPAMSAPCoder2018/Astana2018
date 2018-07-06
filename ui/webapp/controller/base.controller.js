@@ -30,6 +30,10 @@ sap.ui.define([
 		getMapControl: function () {
 			return this.getView().byId("vbi");
 		},
+		
+		getMapLegend: function() {
+			return this.getMapControl().getLegend();
+		},
 
 		onLegendItemClick: function (evt) {
 
