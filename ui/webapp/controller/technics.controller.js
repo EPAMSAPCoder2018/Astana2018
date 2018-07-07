@@ -73,21 +73,7 @@ sap.ui.define([
 			// 	}
 			// });
 		},
-		
-		onAfterRendering : function(){
-			var oMap = this.getMapControl();
-			if (!this._spotDetailPointer) {
-				var textView = new Text(this.createId("SpotDetailPointer"));
-				var contentId = oMap.getId() + "-geoscene-winlayer";
-				var cont = document.getElementById(contentId);
-				var rm = sap.ui.getCore().createRenderManager();
-				rm.renderControl(textView);
-				rm.flush(cont);
-				rm.destroy();
-				this._spotDetailPointer = textView;
-			}
-		},
-
+	
 		onLegendItemClick: function(evt) {
 			var oMap = this.getMapControl();
 			var car = evt.getSource().getBindingContext("mapData").getProperty();
@@ -116,12 +102,6 @@ sap.ui.define([
 			return this.getView().byId("technicsLegend");
 		},
 
-		onZoomChanged : function(evt){
-			if (this._oPopover) {
-				this._oPopover.close();
-			}
-		},
-		
 		onSpotClickItem : function(evt){
 			var that = this;
 			var pos = {};
@@ -144,12 +124,6 @@ sap.ui.define([
 			setTimeout(function(){
 				that._oPopover.openBy(that._spotDetailPointer);
 			},1);
-		},
-
-		onExit : function () {
-			if (this._oPopover) {
-				this._oPopover.destroy();
-			}
 		},
 
 		handleEmailPress: function (oEvent) {

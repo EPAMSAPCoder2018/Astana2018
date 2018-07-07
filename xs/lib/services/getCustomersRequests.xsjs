@@ -8,7 +8,7 @@ var connection = $.xs.dbUtil.getConnection();
 var statement = 'SELECT TOP 5 "custName", "custSurName", "phone", "address" FROM "crm.Customers" ORDER BY ROW_NUMBER() OVER (ORDER BY RAND())';
 var customers = connection.executeQuery(statement);
 
-var statement = 'SELECT TOP 5 "requestDate", "requestStatus" FROM "crm.Requests" ORDER BY ROW_NUMBER() OVER (ORDER BY RAND())';
+var statement = 'SELECT TOP 5 TO_DATE("requestDate") as "requestDate", "requestStatus" FROM "crm.Requests" ORDER BY ROW_NUMBER() OVER (ORDER BY RAND())';
 var requests = connection.executeQuery(statement);
 
 var statement = 'SELECT TOP 5 "problem", "description" FROM "crm.Details" ORDER BY ROW_NUMBER() OVER (ORDER BY RAND())';

@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form">
-	<Popover title="{mapData>problem} {mapData>/requestDate}" class="sapUiContentPadding" placement="Bottom">
+	<Popover title="{mapData>problem} {mapData>requestDate}" class="sapUiContentPadding" placement="Bottom">
 		 <!--+ ' ' + ${mapData>/carModel} + ' ' + ${mapData>VIN}-->
 		<VBox class="sapUiSmallMargin">
 			<f:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3"
@@ -10,10 +10,12 @@
 					<Text text="{mapData>problem}"/>
 					<Label text="Description"/>
 					<Text text="{mapData>description}"/>
-					<Label text="VIN"/>
-					<Text text="{mapData>VIN}"/>
-					<Label text="Average Speed"/>
-					<Text text="{mapData>avgSpeed}"/>
+					<Label text="Customer"/>
+					<Text text="{mapData>custName} {mapData>custSurName}"/>
+					<Label text="Phone"/>
+					<Text text="{mapData>phone}"/>
+					<Label text="Address"/>
+					<Text text="{mapData>address}"/>
 				</f:content>
 			</f:SimpleForm>
 		</VBox>
