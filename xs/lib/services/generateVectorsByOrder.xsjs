@@ -9,10 +9,8 @@ var googleApiUrl = $.xs.properties.get("google.apiUrl");
 
 var request = new $.net.http.Request($.net.http.GET, "/");
 var client = new $.net.http.Client();
-var orderId = $.request.parameters.get("orderId");
-if(!orderId){
-	throw "Parameter orderId is not specified or has incorrect value, please check and try again.";
-}
+var orderId = $.request.parameters.get("orderId") || null;
+
 var connection = $.xs.dbUtil.getConnection();
 var getStages = connection.loadProcedure("getStages");
 var stages = getStages(orderId).RESULT;
@@ -46,14 +44,11 @@ connection.commit();
 $.xs.requestUtil.prepareResponse({addedVectors: vectors});
 
 function getVectorByStage(stage, client, request){
-	var requestParameters = {
-		origin : stage.geoFrom,
-		destination : stage.geoTo,
-		key : googleApiKey,
-		mode : "driving"
-	};
-	var url = $.xs.requestUtil.prepareUrl(googleApiUrl, requestParameters);
-	client.request(request, url);
+	client.request(request, googleApiUrl);
+	request.parameters.push({name:"origin",value:stage.geoFrom});
+	request.parameters.push({name:"destination",value:stage.geoTo});
+	request.parameters.push({name:"key",value:googleApiKey});
+	request.parameters.push({name:"mode",value:"driving"});
 	var response = client.getResponse();
 	var vector = [];
 	if(response.body){

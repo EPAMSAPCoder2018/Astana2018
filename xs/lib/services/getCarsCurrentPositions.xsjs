@@ -1,14 +1,13 @@
-//https://z3szxawch1ksmlwe-astana-xs.cfapps.eu10.hana.ondemand.com/services/getCarsCurrentPositions.xsjs?carId=1000000001 
+//services/getCarsCurrentPositions.xsjs?carId=1000000001 
 $.import("config", "properties");
 $.import("utils", "requestUtil");
 $.import("utils", "dbUtil");
 var carId = $.request.parameters.get("carId");
-var requestParameters = {
-	carId: carId
-};
-var iotApiUrl = $.xs.properties.get("iot.apiUrl") + "/getCarLocation.xsjs";
-var url = $.xs.requestUtil.prepareUrl(iotApiUrl, requestParameters);
+var url = $.xs.properties.get("iot.apiUrl") + "/getCarLocation.xsjs";
 var request = new $.net.http.Request($.net.http.GET, "/");
+if(carId){
+	request.parameters.push({name:"carId",value:carId});
+}
 var client = new $.net.http.Client();
 client.request(request, url);
 var response = client.getResponse();
@@ -20,13 +19,15 @@ if (response.body) {
 		var carsIds = cars.map(function(car) {
 			return car.CARID;
 		});
-		carsIds = ["54463d412cb4e449"];
+		//carsIds = ["54463d412cb4e449"];
 		var connection = $.xs.dbUtil.getConnection();
 		var statement = 'SELECT * FROM "main.Car" WHERE "carId" in (' + (new Array(carsIds.length)).fill('?') + ')';
 		var result = connection.executeQuery.apply(connection, [statement].concat(carsIds));
 		var response = [];
 		for (var i = 0; i < result.length; i++) {
 			var car = JSON.parse(JSON.stringify(result[i]));
+			car.status = car["status.status"];
+			delete  car["status.status"];
 			cars.forEach(function(carPosition) {
 				if (car.carId === carPosition.CARID) {
 					car.location = carPosition.C_LATITUDE + ";" + carPosition.C_LONGITUDE + ";0";

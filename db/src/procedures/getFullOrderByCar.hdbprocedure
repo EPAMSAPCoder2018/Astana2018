@@ -1,0 +1,36 @@
+PROCEDURE "getFullOrderByCar" (IN carId NVARCHAR(50), OUT result "tableTypes.OrderInfo")
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   READS SQL DATA AS
+BEGIN
+	result = SELECT 
+		ORDERS.*,
+		STAGES."stageId",
+		STAGES."status.status" "stageStatus",
+		STAGES."geoFrom".ST_AsGeoJSON() as "geoFrom", 
+		STAGES."geoFromName",
+		STAGES."geoTo".ST_AsGeoJSON() as "geoTo",
+		STAGES."geoToName",
+		VECTORS."vectorId",
+		VECTORS."coordinates".ST_AsGeoJSON() as "coordinates"
+	FROM (
+		SELECT TOP 1
+			ORDERS."orderId",
+			ORDERS."status.status" "orderStatus",
+			ORDERS."orderDate",
+			CAR."carId",
+			CAR."status.status" "carStatus",
+			CAR."licPlate",
+			CAR."carName",
+			CAR."carModel",
+			CAR."VIN",
+			CAR."avgSpeed"
+		FROM "main.Orders" ORDERS
+		INNER JOIN "main.OrdersToCars" ORDER_TO_CAR ON ORDER_TO_CAR."orderId" = ORDERS."orderId"
+		INNER JOIN "main.Car" CAR ON CAR."carId" = ORDER_TO_CAR."carId"
+		WHERE CAR."carId" = :carId and ORDERS."status.status"='P'
+	) ORDERS
+	LEFT JOIN "main.Stages" STAGES ON STAGES."orderId" = ORDERS."orderId"
+	LEFT JOIN "main.Vectors" VECTORS ON VECTORS."stageId" = STAGES."stageId"
+	ORDER BY STAGES."stageId" ASC;
+END

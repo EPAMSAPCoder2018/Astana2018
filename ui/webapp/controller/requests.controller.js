@@ -1,9 +1,8 @@
 sap.ui.define([
 	"com/epam/ui/controller/base.controller",
-	"sap/ui/model/json/JSONModel",
 	'sap/m/Text',
 	"com/epam/ui/model/models"
-], function (BaseController, JSONModel, Text, Models) {
+], function (BaseController, Text, Models) {
 	"use strict";
 	return BaseController.extend("com.epam.ui.controller.technics", {
 		onInit: function () {
@@ -117,12 +116,21 @@ sap.ui.define([
 			return this.getView().byId("requestsLegend");
 		},
 
-		//var oPanel = null;
-		onCloseDetail: function (evt) {
-			//alert("onCloseDetail" + this);
+		onAfterRendering : function(){
+			var oMap = this.getMapControl();
+			if (!this._spotDetailPointer) {
+				var textView = new Text(this.createId("SpotDetailPointer"));
+				var contentId = oMap.getId() + "-geoscene-winlayer";
+				var cont = document.getElementById(contentId);
+				var rm = sap.ui.getCore().createRenderManager();
+				rm.renderControl(textView);
+				rm.flush(cont);
+				rm.destroy();
+				this._spotDetailPointer = textView;
+			}
 		},
-		
-		onSpotClickItem : function(evt){
+
+		onSpotClickItem: function (evt) {
 			var that = this;
 			var pos = {};
 			var position = evt.getParameters().data.Action.Params.Param.forEach(function(param){

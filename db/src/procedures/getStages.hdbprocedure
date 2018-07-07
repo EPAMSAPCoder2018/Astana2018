@@ -6,6 +6,10 @@ BEGIN
    /*************************************
        Write your procedure logic 
    *************************************/
-   result = SELECT "stageId", "geoFrom".ST_AsGeoJSON() as "geoFrom", "geoTo".ST_AsGeoJSON() as "geoTo" FROM "main.Stages"
+	IF :OrderID = null THEN
+		result = SELECT "stageId", "geoFrom".ST_AsGeoJSON() as "geoFrom", "geoTo".ST_AsGeoJSON() as "geoTo" FROM "main.Stages"
 			WHERE "orderId" = :OrderID  ORDER BY 1;
+	ELSE
+		result = SELECT "stageId", "geoFrom".ST_AsGeoJSON() as "geoFrom", "geoTo".ST_AsGeoJSON() as "geoTo" FROM "main.Stages" ORDER BY 1;
+	END IF;
 END
