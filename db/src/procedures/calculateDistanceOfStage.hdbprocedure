@@ -1,0 +1,27 @@
+PROCEDURE "calculateDistanceOfStage"(
+	IN it_stages TABLE(
+		stageId INTEGER
+	),
+	OUT ev_distance Decimal(20, 15)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   READS SQL DATA AS
+BEGIN
+   DECLARE lv_n INTEGER;
+	DECLARE i INTEGER;
+	DECLARE j INTEGER;
+	DECLARE lv_stage INTEGER;
+	DECLARE DIST Decimal(10, 5) = 0;
+	DECLARE sumDIST Decimal(10, 5) = 0;
+
+	FOR lv_n IN 1..record_count(:it_stages) DO
+		lv_stage = :it_stages.stageId[:lv_n];
+		SELECT "coordinates".ST_NumGeometries() INTO i FROM "main.Vectors" WHERE "stageId" = :lv_stage; --it_stages.stageId[:lv_n];--2000000;
+		FOR j IN 1..i-1 DO
+			SELECT "coordinates".ST_GeometryN(:j).ST_Distance("coordinates".ST_GeometryN(:j+1), 'meter') INTO DIST FROM "main.Vectors" WHERE "stageId" = :lv_stage; -- :it_stages.stageId[:lv_n];-- 2000000;
+			sumDIST := :sumDIST + :DIST;
+		END FOR;
+	END FOR;
+	SELECT :sumDIST into ev_distance FROM DUMMY;
+END
