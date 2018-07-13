@@ -21,7 +21,7 @@
 					</vbm:Routes>
 				</vbm:vos>
 				<vbm:legend>
-					<vbm:Legend id="requestsLegend" caption="Routes" items="{mapData>/results}">
+					<vbm:Legend id="requestsLegend" caption="Orders" items="{mapData>/results}">
 						<vbm:items>
 							<vbm:LegendItem text="{= (${mapData>orinalOrder} !== undefined ? 'Order ' : 'Stage ') + ${mapData>index} + ': ' + ${mapData>createDate} }" semanticSpotType="Warning" click="onLegendItemClick"/>
 						</vbm:items>
