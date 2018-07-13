@@ -1,8 +1,9 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/Device",
-	"com/epam/ui/model/models"
-], function(UIComponent, Device, models) {
+	"com/epam/ui/model/models",
+	"com/epam/ui/mock/mockServer"
+], function(UIComponent, Device, models, MockServer) {
 	"use strict";
 
 	return UIComponent.extend("com.epam.ui.Component", {
@@ -17,6 +18,10 @@ sap.ui.define([
 		 * @override
 		 */
 		init: function() {
+			
+			var oMockServer = MockServer.getInstance();
+			oMockServer.start();
+							
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 

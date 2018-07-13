@@ -37,7 +37,7 @@ for(var i=0; i < result.length; i++){
 		vector : {
 			vectorId : row.vectorId,
 			coordinates : JSON.parse(row.coordinates).coordinates.map(function(point){
-			    return point.join(";");
+			    return point.join(",").replace(",0", "");
 			}).join(";")
 		}
 	};

@@ -44,8 +44,8 @@ sap.ui.define([
 			oMap.setMapConfiguration(oMapConfig);
 			oMap.setRefMapLayerStack("DEFAULT");
 		},
-		
-		onAfterRendering : function(){
+
+		onAfterRendering: function () {
 			var oMap = this.getMapControl();
 			if (!this._spotDetailPointer) {
 				var textView = new Text(this.createId("SpotDetailPointer"));
@@ -58,29 +58,52 @@ sap.ui.define([
 				this._spotDetailPointer = textView;
 			}
 		},
-		
-		onZoomChanged : function(evt){
+
+		onZoomChanged: function (evt) {
 			if (this._oPopover) {
 				this._oPopover.close();
 			}
 		},
-		
-		onExit : function () {
+
+		onExit: function () {
 			if (this._oPopover) {
 				this._oPopover.destroy();
 			}
+		},
+		
+		onHideView : function(evt){
 		},
 
 		getMapControl: function () {
 			return this.getView().byId("vbi");
 		},
-		
-		getMapLegend: function() {
+
+		getMapLegend: function () {
 			return this.getMapControl().getLegend();
 		},
 
 		onLegendItemClick: function (evt) {
 
+		},
+
+		createPeriodicalyTask: function (taskToExecute, delay) {
+			var timer;
+			var start = function () {
+				function run() {
+					taskToExecute();
+					timer = setTimeout(run, delay);
+				};
+				timer = setTimeout(run, 1);
+			};
+			return {
+				start: start,
+				stop: function () {
+					if (timer) {
+						clearTimeout(timer);
+						timer = null;
+					}
+				}
+			};
 		}
 	});
 });

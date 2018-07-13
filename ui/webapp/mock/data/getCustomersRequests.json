@@ -1,0 +1,53 @@
+{
+	"result": [{
+		"requestDate": "2017-10-06T21:10:00.000Z",
+		"requestStatus": "Done",
+		"problem": "Ice",
+		"description": "Lorem ipsum",
+		"custName": "Mallorie",
+		"custSurName": "Verni",
+		"phone": "782-328-0452",
+		"address": "122 Nancy Terrace",
+		"location": "27.551886; 53.924332; 0"
+	}, {
+		"requestDate": "2018-06-02T18:55:12.000Z",
+		"requestStatus": "Done",
+		"problem": "Ice",
+		"description": "Lorem ipsum",
+		"custName": "Hazlett",
+		"custSurName": "Kippling",
+		"phone": "380-134-6513",
+		"address": "45 Garrison Park",
+		"location": "27.451886; 53.9; 0"
+	}, {
+		"requestDate": "2018-01-09T02:21:16.000Z",
+		"requestStatus": "Open",
+		"problem": "Dirty street",
+		"description": "Lorem ipsum",
+		"custName": "Moshe",
+		"custSurName": "Coope",
+		"phone": "664-787-5664",
+		"address": "78135 Pepper Wood Road",
+		"location": "27.458845; 53.885903; 0"
+	}, {
+		"requestDate": "2017-08-09T18:18:51.000Z",
+		"requestStatus": "Done",
+		"problem": "Hole on the road",
+		"description": "Lorem ipsum",
+		"custName": "Vi",
+		"custSurName": "Ganter",
+		"phone": "280-133-2113",
+		"address": "1314 Gale Way",
+		"location": "27.463995; 53.937673; 0"
+	}, {
+		"requestDate": "2017-11-26T22:28:00.000Z",
+		"requestStatus": "In process",
+		"problem": "Ice",
+		"description": "Lorem ipsum",
+		"custName": "Celestyn",
+		"custSurName": "Croci",
+		"phone": "163-715-2552",
+		"address": "83 Oneill Alley",
+		"location": "27.593428; 53.938885; 0"
+	}]
+}

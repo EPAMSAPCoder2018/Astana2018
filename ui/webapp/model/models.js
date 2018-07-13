@@ -34,6 +34,20 @@ sap.ui.define([
 				},{
 					name : "Planned",
 					key : "P"
+				}],
+				selectedDeviceKey : "All",
+				devices : [{
+					name : "All",
+					key : "All"
+				},{
+					name : "Snowplow",
+					key : "SNOWPLOW"
+				},{
+					name : "Salt spreader",
+					key : "SALT_SPREADER"
+				},{
+					name : "Brushes",
+					key : "BRUSH"
 				}]
 			});
 			return oModel;

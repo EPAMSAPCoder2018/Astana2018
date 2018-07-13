@@ -44,11 +44,18 @@ connection.commit();
 $.xs.requestUtil.prepareResponse({addedVectors: vectors});
 
 function getVectorByStage(stage, client, request){
-	client.request(request, googleApiUrl);
-	request.parameters.push({name:"origin",value:stage.geoFrom});
-	request.parameters.push({name:"destination",value:stage.geoTo});
-	request.parameters.push({name:"key",value:googleApiKey});
-	request.parameters.push({name:"mode",value:"driving"});
+	var requestParameters = {
+		origin : stage.geoFrom,
+		destination : stage.geoTo,
+		key : googleApiKey,
+		mode : "driving"
+	};
+	var url = $.xs.requestUtil.prepareUrl(googleApiUrl, requestParameters);
+	// request.parameters.push({name:"origin",value:stage.geoFrom});
+	// request.parameters.push({name:"destination",value:stage.geoTo});
+	// request.parameters.push({name:"key",value:googleApiKey});
+	// request.parameters.push({name:"mode",value:"driving"});
+	client.request(request, url);
 	var response = client.getResponse();
 	var vector = [];
 	if(response.body){

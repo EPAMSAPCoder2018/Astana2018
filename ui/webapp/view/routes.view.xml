@@ -3,6 +3,11 @@
 	<OverflowToolbar>
 		<Button type="Up" text="Back" press="onBackButtonPress" visible="{mapData>/backButtonVisible}"/>
 		<ToolbarSpacer/>
+		<Text text="Processed by:" class="sapUiSmallMargin" visible="{mapData>/backButtonVisible}"/>
+		<ComboBox class="sapUiSmallMarginEnd" visible="{mapData>/backButtonVisible}" items="{routesFiltersModel>/devices}" selectionChange="onDevicesFiltersChanged"
+			selectedKey="{routesFiltersModel>/selectedDeviceKey}">
+			<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
+		</ComboBox>
 		<Text text="Status:" class="sapUiSmallMargin"/>
 		<ComboBox class="sapUiSmallMarginEnd" items="{routesFiltersModel>/items}" selectionChange="onFiltersChanged"
 			selectedKey="{routesFiltersModel>/selectedKey}">
@@ -12,18 +17,18 @@
 	
 	<l:FixFlex>
 		<l:flexContent>
-			<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" vos="{mapData>/results}">
+			<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" vos="{path:'mapData>/results'}">
 				<vbm:vos>
 					<vbm:Routes templateShareable="false" items="{mapData>stages}">
 						<vbm:items>
-							<vbm:Route templateShareable="false" position="{mapData>vector/coordinates}" tooltip="{mapData>geoFromName} - {mapData>geoToName}" end="0" start="0" color="{mapData>color}" click="onClickRoute"/>
+							<vbm:Route colorBorder="rgba(255,255,255,0.5)" linewidth="6" templateShareable="false" position="{mapData>vector/coordinates}" tooltip="{mapData>geoFromName} - {mapData>geoToName}" end="0" start="0" color="{mapData>color}" click="onClickRoute"/>
 						</vbm:items>
 					</vbm:Routes>
 				</vbm:vos>
 				<vbm:legend>
 					<vbm:Legend id="requestsLegend" caption="Orders" items="{mapData>/results}">
 						<vbm:items>
-							<vbm:LegendItem text="{= (${mapData>orinalOrder} !== undefined ? 'Order ' : 'Stage ') + ${mapData>index} + ': ' + ${mapData>createDate} }" semanticSpotType="Warning" click="onLegendItemClick"/>
+							<vbm:LegendItem text="{= (${mapData>orinalOrder} !== undefined ? 'Order ' : 'Stage ') + ${mapData>index} + ': ' + ${mapData>createDate} }" color="{mapData>color}" click="onLegendItemClick"/>
 						</vbm:items>
 					</vbm:Legend>
 				</vbm:legend>

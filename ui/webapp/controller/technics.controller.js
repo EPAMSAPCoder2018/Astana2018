@@ -2,85 +2,58 @@ sap.ui.define([
 	"com/epam/ui/controller/base.controller",
 	'sap/m/Text',
 	"com/epam/ui/model/models"
-], function(BaseController, Text, Models) {
+], function (BaseController, Text, Models) {
 	"use strict";
 	return BaseController.extend("com.epam.ui.controller.technics", {
-		onInit: function() {
+		onInit: function () {
 			BaseController.prototype.onInit.apply(this, arguments);
-			this.getView().setModel(Models.createTechnicFiltersModel(), "technicsFiltersModel");
 			var mapDataModel = Models.createMapDataModel();
-			this.getView().setModel(mapDataModel, "mapData");
-			// $.ajax({
-			// 	type: "GET",
-			// 	url: "/services/getCarsCurrentPositions.xsjs",
-			// 	async: false,
-			// 	success: function(data, textStatus, jqXHR) {
-			var data = {
-				"results": [{
-					"carId": "54463d412cb4e449",
-					"status": "A",
-					"licPlate": "",
-					"carName": "MAZ",
-					"carModel": "5449",
-					"VIN": "VIN54463d412cb4e449",
-					"avgSpeed": "30.00",
-					"location": "27.633762;53.916788;0"
-				}, {
-					"carId": "2",
-					"status": "A",
-					"licPlate": "",
-					"carName": "MAZ",
-					"carModel": "5449",
-					"VIN": "VIN54463d412cb4e449",
-					"avgSpeed": "30.00",
-					"location": "27.633805;53.905472;0"
-				}, {
-					"carId": "3",
-					"status": "B",
-					"licPlate": "",
-					"carName": "MAZ",
-					"carModel": "5449",
-					"VIN": "VIN54463d412cb4e449",
-					"avgSpeed": "30.00",
-					"location": "27.634979;53.912372;0"
-				}, {
-					"carId": "1",
-					"status": "N",
-					"licPlate": "",
-					"carName": "MAZ",
-					"carModel": "5449",
-					"VIN": "VIN54463d412cb4e449",
-					"avgSpeed": "30.00",
-					"location": "27.584679;53.916326;0"
-				}]
-			};
-			var statuses = {
-				N: "Warning",
-				A: "Success",
-				B: "Error"
-			};
-			data.results.forEach(function(spot, index) {
-				spot.index = index + 1;
-				spot.status = statuses[spot["status"]];
+			mapDataModel.setData({
+				spots : []
 			});
-			mapDataModel.setProperty("/spots", data.results);
-			//	oModel.setProperty("/centerPosition","53.916326;27.584679");
-			// oModel.setProperty("/zoomlevel",9);
-			// 	},
-			// 	error: function(data, textStatus, jqXHR) {
-			// 		alert("error to post " + textStatus);
-			// 	}
-			// });
+			this.getView().setModel(Models.createTechnicFiltersModel(), "technicsFiltersModel");
+			this.getView().setModel(mapDataModel, "mapData");
+			this._mapDataLoadingTask = this.createPeriodicalyTask(function () {
+				$.ajax({
+					type: "GET",
+					url: "/services/getCarsCurrentPositions.xsjs",
+					async: false,
+					success: function (data, textStatus, jqXHR) {
+						var statuses = {
+							N: "Warning",
+							A: "Success",
+							B: "Error"
+						};
+						data.results.forEach(function (spot, index) {
+							spot.index = index + 1;
+							spot.status = statuses[spot["status"]];
+						});
+						mapDataModel.setProperty("/spots", data.results);
+					},
+					error: function (data, textStatus, jqXHR) {
+						alert("error to post " + textStatus);
+					}
+				});
+			}, 5000);
 		},
-	
-		onLegendItemClick: function(evt) {
+
+		onHideView: function (evt) {
+			this._mapDataLoadingTask.stop();
+		},
+		
+		onAfterRendering: function () {
+			BaseController.prototype.onAfterRendering.apply(this, arguments);
+			this._mapDataLoadingTask.start();
+		},
+
+		onLegendItemClick: function (evt) {
 			var oMap = this.getMapControl();
 			var car = evt.getSource().getBindingContext("mapData").getProperty();
 			oMap.setCenterPosition(car.location.replace(";0", ""));
 			oMap.setZoomlevel(15);
 		},
 
-		onFiltersChanged: function(evt) {
+		onFiltersChanged: function (evt) {
 			var oMap = this.getMapControl();
 			var oMapLegend = this.getMapLegend();
 			var binding = oMap.getAggregation("vos")[0].getBinding("items");
@@ -97,14 +70,10 @@ sap.ui.define([
 			}
 		},
 
-		getMapLegend: function() {
-			return this.getView().byId("technicsLegend");
-		},
-
-		onSpotClickItem : function(evt){
+		onSpotClickItem: function (evt) {
 			var that = this;
 			var pos = {};
-			var position = evt.getParameters().data.Action.Params.Param.forEach(function(param){
+			var position = evt.getParameters().data.Action.Params.Param.forEach(function (param) {
 				pos[param.name] = param["#"];
 			});
 			var marker = document.getElementById(that.getView().byId("SpotDetailPointer").getId());
@@ -117,12 +86,15 @@ sap.ui.define([
 				that._oPopover = sap.ui.xmlfragment("com.epam.ui.view.fragment.carDetails", that);
 				that.getView().addDependent(that._oPopover);
 			}
-			that._oPopover.bindElement({path: evt.getSource().getBindingContext("mapData").getPath(), model: "mapData"});
+			that._oPopover.bindElement({
+				path: evt.getSource().getBindingContext("mapData").getPath(),
+				model: "mapData"
+			});
 			that._oPopover.setPlacement("PreferredRightOrFlip");
-		
-			setTimeout(function(){
+
+			setTimeout(function () {
 				that._oPopover.openBy(that._spotDetailPointer);
-			},1);
+			}, 1);
 		},
 
 		handleEmailPress: function (oEvent) {

@@ -9,18 +9,20 @@
                 "has_header": false,
                 "dialect": "HANA",
 				"type_config": {
-						"delimiter": ","
+					"delimiter": ","
 				}
             },
             "import_settings": {
                 "import_columns": [
+                	"orderId",
                     "orderDate",
                     "status.status"
-                    ]
+                ]
             },
             "column_mappings": {
-            		"orderDate": 2,
-                    "status.status": 3
+            	"orderId": 1,
+        		"orderDate": 2,
+                "status.status": 3
             }
         },
         {
@@ -31,26 +33,28 @@
                 "has_header": false,
                 "dialect": "HANA",
 				"type_config": {
-						"delimiter": ","
+					"delimiter": ","
 				}
             },
             "import_settings": {
                 "import_columns": [
                     "orderId",
+                    "stageId",
 					"status.status",
 					"geoFrom",  
 					"geoFromName",
 					"geoTo",
 					"geoToName"
-                    ]
+                ]
             },
             "column_mappings": {
-            		"orderId": 1,
-                    "status.status": 3,
-                    "geoFrom": 4,  
-					"geoFromName": 5,
-					"geoTo": 6,
-					"geoToName": 7
+        		"orderId": 1,
+        		"stageId": 2,
+                "status.status": 3,
+                "geoFrom": 4,  
+				"geoFromName": 5,
+				"geoTo": 6,
+				"geoToName": 7
             }
         },
         {
@@ -61,18 +65,46 @@
                 "has_header": false,
                 "dialect": "HANA",
 				"type_config": {
-						"delimiter": ","
+					"delimiter": ","
 				}
             },
             "import_settings": {
                 "import_columns": [
                     "stageId",
+                    "vectorId",
 					"coordinates"
-                    ]
+                ]
             },
             "column_mappings": {
-            		"stageId": 1,
-                    "coordinates": 3
+        		"stageId": 1,
+        		"vectorId" : 2,
+                "coordinates": 3
+            }
+        },
+        {
+            "target_table": "main.OrdersToCars",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "OrdersToCars.csv",
+                "has_header": false,
+                "dialect": "HANA",
+				"type_config": {
+					"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "orderToCarId",
+                    "orderId",
+                    "carId",
+                    "driverId"
+                ]
+            },
+            "column_mappings": {
+        		"orderToCarId" : 1,
+                "orderId" : 2,
+                "carId" : 3,
+                "driverId" : 4
             }
         }
     ]
