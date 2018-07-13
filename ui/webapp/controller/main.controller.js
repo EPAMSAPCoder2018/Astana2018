@@ -5,15 +5,18 @@ sap.ui.define([
 	"use strict";
 	return Controller.extend("com.epam.ui.controller.main", {
 		onInit : function (){
-			this.getView().setModel(Models.createTabHandlerModel(), "tabHandlerModel");
+			var model = Models.createTabHandlerModel();
+			this.getView().setModel(model, "tabHandlerModel");
+			this._currentTabView = this.getView().byId(model.getProperty("/selectedTabKey"));
 		},
 		onAfterRendering : function(){
 			
 		},
 		onSelectTab: function (event) {
 			var selectedKey = event.getParameter('selectedKey');
-		//	this.getView().getModel("device").setProperty("selectedTabKey", selectedKey);
-			
+			var nextView = this.getView().byId(selectedKey);
+			this._currentTabView.getController().onHideView({nextView : nextView});
+			this._currentTabView = nextView;
 		}
 	});
 });

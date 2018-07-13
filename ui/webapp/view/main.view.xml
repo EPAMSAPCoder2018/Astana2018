@@ -2,7 +2,7 @@
 	xmlns:vbm="sap.ui.vbm" xmlns:tnt="sap.tnt" xmlns="sap.m" xmlns:viz="sap.viz.ui5.controls" height="100%" displayBlock="true">
 	<App>
 		<pages>
-			<Page showHeader="false">
+			<Page showHeader="false" enableScrolling="true">
 				<content>
 					<tnt:ToolHeader>
 						<Button icon="sap-icon://home" type="Transparent" press="onHomePress">
@@ -22,9 +22,9 @@
 							</items>
 						</IconTabHeader>
 					</tnt:ToolHeader>
-					<mvc:XMLView viewName="com.epam.ui.view.technics" visible="{= ${tabHandlerModel>/selectedTabKey} === 'technics'}"/>
-					<mvc:XMLView viewName="com.epam.ui.view.routes" visible="{= ${tabHandlerModel>/selectedTabKey} === 'routes'}"/>
-					<mvc:XMLView viewName="com.epam.ui.view.requests" visible="{= ${tabHandlerModel>/selectedTabKey} === 'requests'}"/>
+					<mvc:XMLView id="technics" viewName="com.epam.ui.view.technics" visible="{= ${tabHandlerModel>/selectedTabKey} === 'technics'}"/>
+					<mvc:XMLView id="routes" viewName="com.epam.ui.view.routes" visible="{= ${tabHandlerModel>/selectedTabKey} === 'routes'}"/>
+					<mvc:XMLView id="requests" viewName="com.epam.ui.view.requests" visible="{= ${tabHandlerModel>/selectedTabKey} === 'requests'}"/>
 				</content>
 			</Page>
 		</pages>

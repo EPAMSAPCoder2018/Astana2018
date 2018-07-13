@@ -7,85 +7,34 @@ sap.ui.define([
 	return BaseController.extend("com.epam.ui.controller.technics", {
 		onInit: function () {
 			BaseController.prototype.onInit.apply(this, arguments);
-			this.getView().setModel(Models.createRequestFiltersModel(), "requestsFiltersModel");
 			var mapDataModel = Models.createMapDataModel();
-			this.getView().setModel(mapDataModel, "mapData");
-			// $.ajax({
-			// 	type: "GET",
-			// 	url: "/services/getCustomersRequests.xsjs",
-			// 	//url: "/services/getCarsCurrentPositions.xsjs",
-			// 	async: false,
-			// 	success: function(data, textStatus, jqXHR) {
-			var data = {
-				"result": [{
-					"requestDate": "2017-10-06T21:10:00.000Z",
-					"requestStatus": "Done",
-					"problem": "Ice",
-					"description": "Lorem ipsum",
-					"custName": "Mallorie",
-					"custSurName": "Verni",
-					"phone": "782-328-0452",
-					"address": "122 Nancy Terrace",
-					"location": "27.551886; 53.924332; 0"
-				}, {
-					"requestDate": "2018-06-02T18:55:12.000Z",
-					"requestStatus": "Done",
-					"problem": "Ice",
-					"description": "Lorem ipsum",
-					"custName": "Hazlett",
-					"custSurName": "Kippling",
-					"phone": "380-134-6513",
-					"address": "45 Garrison Park",
-					"location": "27.451886; 53.9; 0"
-				}, {
-					"requestDate": "2018-01-09T02:21:16.000Z",
-					"requestStatus": "Open",
-					"problem": "Dirty street",
-					"description": "Lorem ipsum",
-					"custName": "Moshe",
-					"custSurName": "Coope",
-					"phone": "664-787-5664",
-					"address": "78135 Pepper Wood Road",
-					"location": "27.458845; 53.885903; 0"
-				}, {
-					"requestDate": "2017-08-09T18:18:51.000Z",
-					"requestStatus": "Done",
-					"problem": "Hole on the road",
-					"description": "Lorem ipsum",
-					"custName": "Vi",
-					"custSurName": "Ganter",
-					"phone": "280-133-2113",
-					"address": "1314 Gale Way",
-					"location": "27.463995; 53.937673; 0"
-				}, {
-					"requestDate": "2017-11-26T22:28:00.000Z",
-					"requestStatus": "In process",
-					"problem": "Ice",
-					"description": "Lorem ipsum",
-					"custName": "Celestyn",
-					"custSurName": "Croci",
-					"phone": "163-715-2552",
-					"address": "83 Oneill Alley",
-					"location": "27.593428; 53.938885; 0"
-				}]
-			};
-			var statuses = {
-				"Done": "Success",
-				"In process": "Warning",
-				"Open": "Error"
-			};
-			data.result.forEach(function (spot, index) {
-				spot.index = index + 1;
-				spot.status = statuses[spot["requestStatus"]];
+			mapDataModel.setData({
+				spots : []
 			});
-			mapDataModel.setProperty("/spots", data.result);
-			//	oModel.setProperty("/centerPosition","53.916326;27.584679");
-			// oModel.setProperty("/zoomlevel",9);
-			// 	},
-			// 	error: function(data, textStatus, jqXHR) {
-			// 		alert("error to post " + textStatus);
-			// 	}
-			// });
+			this.getView().setModel(Models.createRequestFiltersModel(), "requestsFiltersModel");
+			this.getView().setModel(mapDataModel, "mapData");
+			this._mapDataLoadingTask = this.createPeriodicalyTask(function () {
+				$.ajax({
+					type: "GET",
+					url: "/services/getCustomersRequests.xsjs",
+					async: false,
+					success: function (data, textStatus, jqXHR) {
+						var statuses = {
+							"Done": "Success",
+							"In process": "Warning",
+							"Open": "Error"
+						};
+						data.result.forEach(function (spot, index) {
+							spot.index = index + 1;
+							spot.status = statuses[spot["requestStatus"]];
+						});
+						mapDataModel.setProperty("/spots", data.result);
+					},
+					error: function (data, textStatus, jqXHR) {
+						alert("error to post " + textStatus);
+					}
+				});
+			}, 5000);
 		},
 
 		onLegendItemClick: function (evt) {
@@ -111,29 +60,20 @@ sap.ui.define([
 				binding.filter([oFilterStatus]);
 			}
 		},
-
-		getMapLegend: function () {
-			return this.getView().byId("requestsLegend");
+		
+		onHideView : function(evt){
+			this._mapDataLoadingTask.stop();
 		},
 
-		onAfterRendering : function(){
-			var oMap = this.getMapControl();
-			if (!this._spotDetailPointer) {
-				var textView = new Text(this.createId("SpotDetailPointer"));
-				var contentId = oMap.getId() + "-geoscene-winlayer";
-				var cont = document.getElementById(contentId);
-				var rm = sap.ui.getCore().createRenderManager();
-				rm.renderControl(textView);
-				rm.flush(cont);
-				rm.destroy();
-				this._spotDetailPointer = textView;
-			}
+		onAfterRendering: function () {
+			BaseController.prototype.onAfterRendering.apply(this, arguments);
+			this._mapDataLoadingTask.start();
 		},
 
 		onSpotClickItem: function (evt) {
 			var that = this;
 			var pos = {};
-			var position = evt.getParameters().data.Action.Params.Param.forEach(function(param){
+			var position = evt.getParameters().data.Action.Params.Param.forEach(function (param) {
 				pos[param.name] = param["#"];
 			});
 			var marker = document.getElementById(that.getView().byId("SpotDetailPointer").getId());
@@ -146,12 +86,15 @@ sap.ui.define([
 				that._oPopover = sap.ui.xmlfragment("com.epam.ui.view.fragment.requestDetails", that);
 				that.getView().addDependent(that._oPopover);
 			}
-			that._oPopover.bindElement({path: evt.getSource().getBindingContext("mapData").getPath(), model: "mapData"});
+			that._oPopover.bindElement({
+				path: evt.getSource().getBindingContext("mapData").getPath(),
+				model: "mapData"
+			});
 			that._oPopover.setPlacement("PreferredRightOrFlip");
-		
-			setTimeout(function(){
+
+			setTimeout(function () {
 				that._oPopover.openBy(that._spotDetailPointer);
-			},1);
+			}, 1);
 		}
 
 	});
