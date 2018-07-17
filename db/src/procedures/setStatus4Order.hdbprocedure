@@ -1,0 +1,23 @@
+PROCEDURE "setStatus4Order"(
+	IN iv_orderId INTEGER,
+	IN iv_status NVARCHAR(1)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER AS
+BEGIN
+	DECLARE lv_check INTEGER = 0;
+	DECLARE order_existance CONDITION FOR SQL_ERROR_CODE 10000;
+	DECLARE status_existance CONDITION FOR SQL_ERROR_CODE 10001;
+	
+	SELECT COUNT("orderId") INTO lv_check FROM "main.Orders" WHERE "orderId" = :iv_orderId;
+	IF lv_check = 0 THEN
+		SIGNAL order_existance SET MESSAGE_TEXT = 'Required order does not exist';	
+	END IF;
+	SELECT COUNT("status") INTO lv_check FROM "main.Status" WHERE "status" = :iv_status;
+	IF lv_check = 0 THEN
+		SIGNAL status_existance SET MESSAGE_TEXT = 'Required status does not exist';	
+	END IF;
+	
+	UPDATE "main.Orders" SET "status.status" = :iv_status WHERE "orderId" = :iv_orderId;
+	COMMIT;
+END
