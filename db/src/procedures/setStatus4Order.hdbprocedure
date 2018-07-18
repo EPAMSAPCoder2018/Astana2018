@@ -19,5 +19,10 @@ BEGIN
 	END IF;
 	
 	UPDATE "main.Orders" SET "status.status" = :iv_status WHERE "orderId" = :iv_orderId;
+	IF :iv_status = 'I' THEN
+		UPDATE "main.Stages" SET "status.status" = 'P' WHERE "orderId" = :iv_orderId;
+	ELSEIF :iv_status = 'D' THEN
+		UPDATE "main.Stages" SET "status.status" = :iv_status WHERE "orderId" = :iv_orderId;
+	END IF;	
 	COMMIT;
 END
