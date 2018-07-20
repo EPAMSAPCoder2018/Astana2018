@@ -1,0 +1,26 @@
+PROCEDURE "calculateDistanceFromCoordinates"(
+	IN it_coord TABLE(
+		long DOUBLE,
+		lat DOUBLE
+	),
+	OUT ev_distance Decimal(20, 15)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   READS SQL DATA AS
+BEGIN
+	DECLARE lv_n INTEGER;
+	DECLARE lv_start NVARCHAR(100);
+	DECLARE lv_stop NVARCHAR(100);
+	DECLARE DIST Decimal(10, 5) = 0;
+	DECLARE sumDIST Decimal(10, 5) = 0;
+	
+	FOR lv_n IN 1..record_count(:it_coord)-1 DO
+		lv_start = 'Point ('|| :it_coord.long[:lv_n] ||' '|| :it_coord.lat[:lv_n] ||')';
+		lv_stop  = 'Point ('|| :it_coord.long[:lv_n+1] ||' '|| :it_coord.lat[:lv_n+1] ||')'; 
+		
+		SELECT NEW ST_POINT(:lv_start, 4326).ST_Distance(NEW ST_POINT(:lv_stop, 4326), 'meter') INTO DIST FROM DUMMY;
+		sumDIST := :sumDIST + :DIST;
+	END FOR;
+	SELECT :sumDIST into ev_distance FROM DUMMY;
+END

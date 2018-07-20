@@ -7,6 +7,7 @@ context main {
             //Driver    : association[0..1] to Drivers { driverId };
             status    : association[0..1] to Status { status };
             orderDate : UTCTimestamp;
+            distance  : Integer              default 0;
     }
     technical configuration {
         column store;
@@ -22,6 +23,7 @@ context main {
             geoFromName : String(100);
             geoTo       : hana.ST_POINT(4326);
             geoToName   : String(100);
+            distance    : Integer              default 0;
     }
     technical configuration {
         column store;

@@ -1,0 +1,43 @@
+PROCEDURE "changeStageStatus"(
+	IN iv_lat DOUBLE,
+	IN iv_long DOUBLE,
+	IN iv_order INTEGER,
+	OUT ev_result INTEGER
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN
+
+DECLARE lv_point NVARCHAR(255);
+DECLARE lv_stageId INTEGER = 0;
+DECLARE lv_status NVARCHAR(1);
+DECLARE lv_st INTEGER = 0;
+
+SELECT 0 INTO ev_result FROM DUMMY;
+
+lv_point = 'Point (' || :iv_long || ' ' || :iv_lat || ')';
+lt_stages = SELECT "stageId", "coordinates".ST_Transform(1000004326).ST_Contains(NEW ST_Point(:lv_point, 1000004326)) as EXIST FROM "main.Vectors" where "vectorId" IN 
+	 (SELECT "vectorId" FROM "main.Vectors" WHERE "stageId" IN (SELECT "stageId" FROM "main.Stages" where "orderId" = :iv_order AND "status.status" <> 'D'));
+
+SELECT COUNT("stageId") INTO lv_stageId FROM :lt_stages WHERE "EXIST" = 1;
+ IF lv_stageId <> 0 THEN
+	SELECT "stageId" INTO lv_stageId FROM :lt_stages WHERE "EXIST" = 1;
+	SELECT "status.status" INTO lv_status FROM "main.Stages" WHERE "stageId" = :lv_stageId;
+	SELECT COUNT("stageId") INTO lv_st FROM "main.Stages" WHERE "status.status" = 'I' AND "stageId" IN (SELECT "stageId" FROM :lt_stages);
+	IF :lv_status = 'P' AND lv_st = 0 THEN
+		UPDATE "main.Stages" SET "status.status" = 'I' WHERE "stageId" = :lv_stageId;
+		SELECT 1 INTO ev_result FROM DUMMY;
+		COMMIT;
+	ELSEIF :lv_st <> 0 THEN
+		SELECT "stageId" INTO lv_st FROM "main.Stages" WHERE "status.status" = 'I' AND "stageId" IN (SELECT "stageId" FROM :lt_stages);
+		IF :lv_st <> :lv_stageId THEN
+			UPDATE "main.Stages" SET "status.status" = 'I' WHERE "stageId" = :lv_stageId;
+			UPDATE "main.Stages" SET "status.status" = 'D' WHERE "stageId" = :lv_st;
+			SELECT 2 INTO ev_result FROM DUMMY;
+			COMMIT;
+		END IF;	
+	END IF;
+ END IF;
+ 
+END

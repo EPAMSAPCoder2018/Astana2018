@@ -17,7 +17,7 @@
 							</layoutData>
 							<items>
 								<IconTabFilter key="technics" text="Technics"></IconTabFilter>
-								<IconTabFilter key="routes" text="Routes"></IconTabFilter>
+								<IconTabFilter key="routes" text="Orders"></IconTabFilter>
 								<IconTabFilter key="requests" text="Requests"></IconTabFilter>
 							</items>
 						</IconTabHeader>
