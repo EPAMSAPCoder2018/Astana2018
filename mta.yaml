@@ -30,9 +30,6 @@ modules:
         properties:
           name: xs_api
           url: '~{url}'
-      - name: ui5-lib
-        properties:
-          ui5liburl: '~{url}'
   - name: db
     type: hdb
     path: db
@@ -56,9 +53,3 @@ resources:
     properties:
       hdi-container-name: '${service-name}'
     type: com.sap.xs.hdi-container
-  - name: ui5-lib
-    type: configuration 
-    parameters:
-      ID: com.sap.ui5.dist.sapui5-dist-xsa.XSAC_SAPUI5_FESV4:sapui5_fesv4 # Specifies the the ID of the provider MTA.
-      name: sapui5_fesv4
-      version: ">1.50.2"

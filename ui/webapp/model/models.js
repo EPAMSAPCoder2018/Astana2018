@@ -5,6 +5,11 @@ sap.ui.define([
 	"use strict";
 
 	return {
+		
+		createEmptyJSONModel: function() {
+			var oModel = new JSONModel(Device);
+			return oModel;
+		},
 
 		createDeviceModel: function() {
 			var oModel = new JSONModel(Device);
@@ -48,6 +53,9 @@ sap.ui.define([
 				},{
 					name : "Brushes",
 					key : "BRUSH"
+				},{
+					name : "N/A",
+					key : "NA"
 				}]
 			});
 			return oModel;

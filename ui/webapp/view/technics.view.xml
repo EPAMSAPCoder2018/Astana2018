@@ -7,7 +7,7 @@
 	</ComboBox>
 	<l:FixFlex>
 		<l:flexContent>
-			<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" openWindow="onOpenDetail" closeWindow="onCloseDetail" zoomChanged="onZoomChanged">
+			<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" zoomChanged="onZoomChanged">
 				<vbm:vos>
 					<vbm:Spots  posChangeable="true" scaleChangeable="false" contextMenu="onSpotContextMenuItem"
 						items="{ path: 'mapData>/spots'}">

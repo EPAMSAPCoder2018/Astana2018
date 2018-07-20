@@ -4,13 +4,39 @@ sap.ui.define([
 	"com/epam/ui/model/models"
 ], function (BaseController, Text, Models) {
 	"use strict";
+	var STATUSES_MAPPING = {
+		I: "rgb(240,255,0)",
+		D: "rgb(0,255,0)",
+		P: "rgb(152,152,152)",
+		GPS: "rgb(0,255,0)",
+		SNOWPLOW: "rgb(0,128,255)",
+		SALT_SPREADER: "rgb(255,0,255)",
+		BRUSH: "rgb(255,128,0)"
+	};
+
+	var MODELS = {
+		"routesFiltersModel": Models.createRoutesFiltersModel(),
+		"mapData": Models.createMapDataModel(),
+		"technicalModel": Models.createEmptyJSONModel(),
+		"carsModel": Models.createEmptyJSONModel(),
+		"stagesModel": Models.createEmptyJSONModel()
+	};
+	MODELS.technicalModel.setProperty("/isOrderOpened", false);
+	MODELS.technicalModel.setProperty("/lineWidth", 6);
+	MODELS.stagesModel.setData([{
+		isStage: true,
+		routes: []
+	}, {
+		isStage: true,
+		routes: []
+	}, {
+		isSpot: true,
+		spots: []
+	}]);
 	return BaseController.extend("com.epam.ui.controller.routes", {
 		onInit: function () {
+			this.MODELS = MODELS;
 			BaseController.prototype.onInit.apply(this, arguments);
-			var mapDataModel = Models.createMapDataModel();
-			this.getView().setModel(Models.createRoutesFiltersModel(), "routesFiltersModel");
-			this.getView().setModel(mapDataModel, "mapData");
-			this._mapDataModel = mapDataModel;
 			this._filters = {
 				status: [new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, "I"), new sap.ui.model.Filter("status", sap.ui
 					.model.FilterOperator.EQ, "D"), new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, "P")],
@@ -25,51 +51,12 @@ sap.ui.define([
 					url: "/services/getOrders.xsjs",
 					async: false,
 					success: function (data, textStatus, jqXHR) {
-						var statuses = {
-							I: "rgb(240,255,0)",
-							D: "rgb(0,255,0)",
-							P: "rgb(152,152,152)"
-						}; //p - planned
-
 						data.results.forEach(function (order, i) {
-							order.color = statuses[order.status];
-							order.stages.forEach(function (stage, index) {
-								stage.index = index + 1;
-								stage.id = stage.stageId;
-								stage.color = statuses[stage.status];
-								stage.geoFrom = stage.geoFrom.split(",").reverse().join(";");
-								stage.geoTo = stage.geoTo.split(",").reverse().join(";");
-								stage.createDate = stage.geoFromName + " - " + stage.geoToName;
-							});
+							order.index = i + 1;
+							order.color = STATUSES_MAPPING[order.status];
+							order.isOrder = true;
 						});
-						data.results = data.results.map(function (order, i) {
-							var newOrder = {};
-							newOrder.index = i + 1;
-							newOrder.car = order.car;
-							newOrder.id = order.orderId;
-							newOrder.status = order.status;
-							newOrder.createDate = order.orderDate;
-							newOrder.color = statuses[order.status];
-							newOrder.geoToName = "To";
-							newOrder.geoFromName = "From";
-							newOrder.stages = [{
-								vector: {}
-							}];
-							newOrder.orinalOrder = [order];
-							newOrder.stages[0].vector.coordinates = order.stages.map(function (stage, index) {
-								return stage.vector.coordinates;
-							}).join(";");
-							newOrder.stages[0].color = statuses[order.status];
-							newOrder.stages[0].centerPosition = order.stages[Math.round(order.stages.length / 2)].geoFrom.split(",").reverse().join(
-								";");
-							return newOrder;
-						});
-						// data.results.forEach(function (order, index) {
-						// 	order.index = index + 1;
-						// 	order.status = statuses[order["status"]];
-						// });
-						data.backButtonVisible = false;
-						mapDataModel.setData(data);
+						MODELS.mapData.setData(data);
 					},
 					error: function (data, textStatus, jqXHR) {
 						alert("error to post " + textStatus);
@@ -80,12 +67,26 @@ sap.ui.define([
 
 		onAfterRendering: function () {
 			BaseController.prototype.onAfterRendering.apply(this, arguments);
-			this._mapDataLoadingTask.start();
+			if (this._devicesLoadingTask || this._stagesLoadingTask) {
+				if (this._devicesLoadingTask) {
+					this._devicesLoadingTask.start();
+				}
+				if (this._stagesLoadingTask) {
+					this._stagesLoadingTask.start();
+				}
+			} else {
+				this._mapDataLoadingTask.start();
+			}
 		},
 
 		onHideView: function (evt) {
-			if (this._devicesLoadingTask) {
-				this._devicesLoadingTask.stop();
+			if (this._devicesLoadingTask || this._stagesLoadingTask) {
+				if (this._devicesLoadingTask) {
+					this._devicesLoadingTask.start();
+				}
+				if (this._stagesLoadingTask) {
+					this._stagesLoadingTask.start();
+				}
 			} else {
 				this._mapDataLoadingTask.stop();
 			}
@@ -93,17 +94,26 @@ sap.ui.define([
 
 		onBackButtonPress: function (evt) {
 			if (this._pathForParent) {
-				this._devicesLoadingTask.stop();
-				this._mapDataModel.setProperty("/backButtonVisible", false);
+				if (this._devicesLoadingTask || this._stagesLoadingTask) {
+					if (this._devicesLoadingTask) {
+						this._devicesLoadingTask.start();
+					}
+					if (this._stagesLoadingTask) {
+						this._stagesLoadingTask.start();
+					}
+				}
+				MODELS.technicalModel.setProperty("/isOrderOpened", false);
 				this.changeVosBinding("mapData>" + this._pathForParent, null, 8, true);
 				delete this._pathForParent;
 				delete this._devicesLoadingTask;
+				delete this._stagesLoadingTask;
 				this._mapDataLoadingTask.start();
 			}
 		},
 
-		changeVosBinding: function (newPath, zoomPoint, zoomLevel, isNavBack) {
+		changeVosBinding: function (newPath, zoomPoint, zoomLevel, isNavBack, pathForDetails) {
 			var oMap = this.getMapControl();
+			var orderDatails = this.getView().byId("orderDatails");
 			var bindingInfoVos = oMap.getBindingInfo("vos");
 			var bindingInfoLegend = oMap.getLegend().getBindingInfo("items");
 			oMap.setCenterPosition(zoomPoint || oMap.getCenterPosition());
@@ -113,11 +123,17 @@ sap.ui.define([
 			}
 			oMap.bindAggregation("vos", {
 				path: newPath,
-				template: bindingInfoVos.template
+				factory: bindingInfoVos.factory
 			});
+			if (pathForDetails) {
+				orderDatails.bindElement({
+					path: pathForDetails,
+					model: "mapData"
+				});
+			}
 			oMap.getLegend().bindAggregation("items", {
-				path: newPath + (isNavBack ? "" : "/0/stages"),
-				template: bindingInfoLegend.template
+				path: newPath + (isNavBack ? "" : "0/routes"),
+				factory: bindingInfoLegend.factory
 			});
 			this._pathForParent = bindingInfoVos.path;
 		},
@@ -127,15 +143,28 @@ sap.ui.define([
 				var that = this;
 				var context = evt.getSource().getBindingContext("mapData");
 				var centerPosition = evt.getParameters().data.Action.AddActionProperties.AddActionProperty[0]["#"].replace(";0.0", ""); //context.getProperty().centerPosition;
-				var path = context.getPath().replace("/stages/0", "") + "/orinalOrder"; // /stages/0 - it is fixed part
-				var order = this._mapDataModel.getProperty(context.getPath().replace("/stages/0", ""));
-				var statuses = {
-					GPS: "rgba(0,255,0,0.5)",
-					SNOWPLOW: "rgba(0,128,255,0.5)",
-					SALT_SPREADER: "rgba(255,0,255,0.5)",
-					BRUSH: "rgba(255,128,0,0.5)"
-				};
+				var order = context.getProperty();
 				this._mapDataLoadingTask.stop();
+				this._stagesLoadingTask = this.createPeriodicalyTask(function () {
+					$.ajax({
+						type: "GET",
+						url: "/services/getAllStages.xsjs?orderId=" + order.id,
+						async: false,
+						success: function (data, textStatus, jqXHR) {
+							data.forEach(function (stage, index) {
+								stage.index = index + 1;
+								stage.id = stage.stageId;
+								stage.color = STATUSES_MAPPING[stage.status];
+								stage.createDate = stage.status;
+							});
+							MODELS.stagesModel.setProperty("/0/routes", data);
+						},
+						error: function (data, textStatus, jqXHR) {
+							alert("error to post " + textStatus);
+						}
+					});
+				}, 5000);
+				this._stagesLoadingTask.start();
 				if (order.id === 1000003) {
 					this._devicesLoadingTask = this.createPeriodicalyTask(function () {
 						$.ajax({
@@ -145,15 +174,14 @@ sap.ui.define([
 							success: function (data, textStatus, jqXHR) {
 								data.forEach(function (stage, index) {
 									stage.index = index + 1;
-									stage.id = stage.orderId;
-									stage.color = statuses[stage.status];
+									stage.id = stage.stageId;
+									stage.color = STATUSES_MAPPING[stage.status];
 									stage.createDate = stage.status;
 								});
-								var items = [that._mapDataModel.getProperty(path + "/0")];
-								items.push({
-									stages: data
-								});
-								that._mapDataModel.setProperty(path, items);
+								MODELS.stagesModel.setProperty("/1/routes", data);
+								MODELS.stagesModel.setProperty("/2/spots", [{
+									coordinates: "27.659810066223145;53.92362976074219;0"
+								}]);
 							},
 							error: function (data, textStatus, jqXHR) {
 								alert("error to post " + textStatus);
@@ -162,24 +190,17 @@ sap.ui.define([
 					}, 5000);
 					this._devicesLoadingTask.start();
 				}
-				this.changeVosBinding("mapData>" + path, centerPosition, 13);
-				this._mapDataModel.setProperty("/backButtonVisible", true);
+				this.changeVosBinding("stagesModel>/", centerPosition, 13, false, context.getPath());
+				MODELS.technicalModel.setProperty("/isOrderOpened", true);
 			}
 		},
 
 		onLegendItemClick: function (evt) {
 			var oMap = this.getMapControl();
-			var context = evt.getSource().getBindingContext("mapData");
+			var context = evt.getSource().getBindingContext("mapData") || evt.getSource().getBindingContext("stagesModel");
 			var data = context.getProperty();
 			var pos = null;
-			var colorPath = null;
-			if (data.stages) {
-				pos = data.stages[0].centerPosition;
-				colorPath = context.getPath() + "/stages/0/color";
-			} else {
-				pos = data.geoFrom;
-				colorPath = context.getPath() + "/color";
-			}
+			var colorPath = context.getPath() + "/color";
 			var color = data.color;
 			var colorHighlighter = function (counter, enableHighlighting) {
 				if (counter < 6) {
@@ -195,7 +216,7 @@ sap.ui.define([
 				}
 			}
 			colorHighlighter(0, true);
-			oMap.setCenterPosition(pos);
+			//	oMap.setCenterPosition(pos);
 			if (oMap.getZoomlevel() < 13) {
 				oMap.setZoomlevel(13);
 			}
@@ -206,7 +227,6 @@ sap.ui.define([
 			var oMapLegend = this.getMapLegend();
 			var binding = !this._pathForParent ? oMap.getBinding("vos") : oMap.getAggregation("vos")[0].getBinding("items");
 			var key = evt.getParameters().selectedItem.getKey();
-			oMap.setZoomlevel(13);
 			var filters = [];
 			if (key === "All") {
 				filters = [
@@ -235,7 +255,6 @@ sap.ui.define([
 			var oMapLegend = this.getMapLegend();
 			var binding = oMap.getAggregation("vos")[1].getBinding("items");
 			var key = evt.getParameters().selectedItem.getKey();
-			oMap.setZoomlevel(13);
 			var filters = [];
 			if (key === "All") {
 				filters = [
@@ -244,6 +263,8 @@ sap.ui.define([
 					new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, "SNOWPLOW"),
 					new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, "GPS")
 				];
+			} else if (key === "NA") {
+				filters = [];
 			} else {
 				filters = [
 					new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, key)
@@ -257,9 +278,10 @@ sap.ui.define([
 		},
 
 		onZoomChanged: function (evt) {
-			if (this._oPopover) {
-				this._oPopover.close();
-			}
+			BaseController.prototype.onZoomChanged.apply(this, arguments);
+			var zoomLevel = parseInt(evt.getParameter("zoomLevel"));
+			zoomLevel = zoomLevel > 15 ? zoomLevel : zoomLevel - 6
+			MODELS.technicalModel.setProperty("/lineWidth", zoomLevel);
 		},
 
 		onSpotClickItem: function (evt) {
@@ -298,6 +320,88 @@ sap.ui.define([
 		handleEmailPress: function (oEvent) {
 			this._oPopover.close();
 			MessageToast.show("E-Mail has been sent");
+		},
+
+		vosFactoryFunction: function (sId, oContext) {
+			var currentObject = oContext.getProperty();
+			var routes = null;
+			if (currentObject.isOrder) {
+				routes = new sap.ui.vbm.Routes({
+					items: [new sap.ui.vbm.Route({
+						colorBorder: "rgb(255,255,255)",
+						linewidth: "{= ${mapData>lineWidth} !== undefined ? ${mapData>lineWidth} : ${technicalModel>/lineWidth}}",
+						position: "{mapData>coordinates}",
+						tooltip: "{mapData>description}",
+						end: "0",
+						start: "0",
+						color: "{mapData>color}",
+						click: [this.onClickRoute, this]
+					})]
+				});
+			} else if (currentObject.isStage) {
+				routes = new sap.ui.vbm.Routes({
+					items: {
+						path: "stagesModel>routes",
+						template: new sap.ui.vbm.Route({
+							colorBorder: "rgb(255,255,255)",
+							linewidth: "{= ${stagesModel>lineWidth} !== undefined ? ${stagesModel>lineWidth} : ${technicalModel>/lineWidth}}",
+							position: "{stagesModel>coordinates}",
+							tooltip: "{stagesModel>description}",
+							end: "0",
+							start: "0",
+							color: "{stagesModel>color}",
+							click: [this.onClickRoute, this]
+						})
+					}
+				});
+			} else if (currentObject.isSpot) {
+				routes = new sap.ui.vbm.Spots({
+					items: {
+						path: "stagesModel>spots",
+						template: new sap.ui.vbm.Spot({
+							position: "{stagesModel>coordinates}",
+							state: "Error",
+							color: "{stagesModel>color}"
+						})
+					}
+				});
+			}
+			return routes;
+		},
+
+		legendFactoryFunction: function (sId, oContext) {
+			var currentObject = oContext.getProperty();
+			var item = null;
+			var that = this;
+			if (currentObject.isOrder) {
+				item = new sap.ui.vbm.LegendItem(sId, {
+					text: "{= 'Order ' + ${mapData>index} + ': ' + ${mapData>createDate} }",
+					color: "{mapData>color}",
+					click: [this.onLegendItemClick, this]
+				});
+			} else {
+				item = new sap.ui.vbm.LegendItem(sId, {
+					text: "{= 'Stage ' + ${stagesModel>index} + ': ' + ${stagesModel>geoFromName} + '-' + ${stagesModel>geoToName} }",
+					color: "{stagesModel>color}",
+					click: [this.onLegendItemClick, this]
+				});
+			}
+			return item;
+		},
+
+		onChartClick: function (evt) {
+			MODELS.routesFiltersModel.setProperty("/selectedDeviceKey", evt.getSource().data("name"))
+			this.onDevicesFiltersChanged({
+				getParameters: function () {
+					return {
+						selectedItem: {
+							getKey: function () {
+								return evt.getSource().data("name");
+							}
+						}
+					};
+				}
+			});
 		}
 	});
 });

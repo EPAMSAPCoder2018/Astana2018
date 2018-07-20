@@ -1,17 +1,10 @@
 {
 	"welcomeFile": "/webapp/index.html",
 	"routes": [{
-		"path": "/services/getCarsCurrentPositions.xsjs",
+		"path": "/services/(.*).xsjs",
 		"target": {
 			"type": "destination",
 			"name": "xs_api"
-		}
-	},
-	{
-		"path": "/servicesx/getCarsCurrentPositions.xsjs",
-		"target": {
-			"type": "destination",
-			"name": "xs_out_api"
 		}
 	}, {
 		"path": "/resources",

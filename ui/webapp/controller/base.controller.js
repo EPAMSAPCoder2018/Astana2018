@@ -26,19 +26,28 @@ sap.ui.define([
 			};
 			oMap.setMapConfiguration(oMapConfig);
 			oMap.setRefMapLayerStack("DEFAULT");
+			if(this.MODELS){
+				var modelsNames = Object.keys(this.MODELS);
+				for(var i=0; i < modelsNames.length; i++){
+					this.getView().setModel(this.MODELS[modelsNames[i]], modelsNames[i]);
+				}
+			}
 		},
 
 		onAfterRendering: function () {
 			var oMap = this.getMapControl();
 			if (!this._spotDetailPointer) {
-				var textView = new Text(this.createId("SpotDetailPointer"));
-				var contentId = oMap.getId() + "-geoscene-winlayer";
-				var cont = document.getElementById(contentId);
-				var rm = sap.ui.getCore().createRenderManager();
-				rm.renderControl(textView);
-				rm.flush(cont);
-				rm.destroy();
-				this._spotDetailPointer = textView;
+				var that = this;
+				setTimeout(function(){
+					var textView = new Text(that.createId("SpotDetailPointer"));
+					var contentId = oMap.getId() + "-geoscene-winlayer";
+					var cont = document.getElementById(contentId);
+					var rm = sap.ui.getCore().createRenderManager();
+					rm.renderControl(textView);
+					rm.flush(cont);
+					rm.destroy();
+					that._spotDetailPointer = textView;
+				},1000);
 			}
 		},
 

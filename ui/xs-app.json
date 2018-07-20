@@ -5,11 +5,8 @@
 		"logoutEndpoint": "/do/logout"
 	},
 	"routes": [{
-		"source": "/services/getCarsCurrentPositions.xsjs",
+		"source": "/services/(.*).xsjs",
 		"destination": "xs_api"
-	},{
-		"source": "/servicesx/getCarsCurrentPositions.xsjs",
-		"destination": "xs_out_api"
 	}, {
 		"source": "^/ui/(.*)$",
 		"target": "$1",
