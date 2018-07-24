@@ -1,41 +1,41 @@
 <mvc:View controllerName="com.epam.ui.controller.requests" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
 	xmlns:vbm="sap.ui.vbm" xmlns:vk="sap.ui.vk" xmlns:l="sap.ui.layout" height="85%" displayBlock="true">
-	<Text text="Status:" class="sapUiSmallMargin"/>
+	<Text text="Статус:" class="sapUiSmallMargin"/>
 	<ComboBox class="sapUiSmallMarginEnd" items="{requestsFiltersModel>/items}" selectionChange="onFiltersChanged"
 		selectedKey="{requestsFiltersModel>/selectedKey}">
 		<core:Item key="{requestsFiltersModel>key}" text="{requestsFiltersModel>name}"/>
 	</ComboBox>
 	<l:FixFlex>
 		<l:flexContent>
-<<<<<<< HEAD
-			<vk:MapContainer id="mapContainer" autoAdjustHeight="true">
-				<vk:content>
-					<vk:ContainerContent title="Analytic Map" icon="sap-icon://choropleth-chart">
-						<vk:content>
-							<vbm:AnalyticMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" openWindow="onOpenDetail"
-								closeWindow="onCloseDetail" zoomChanged="onZoomChanged" regionClick="onRS">
-								<vbm:vos>
-									<vbm:Spots posChangeable="true" scaleChangeable="false" contextMenu="onSpotContextMenuItem" items="{ path: 'mapData>/spots'}">
-										<vbm:items>
-											<vbm:Spot position="{mapData>location}" tooltip="{= ${mapData>problem} + ' ' + ${mapData>description} + ' ' + ${mapData>custSurName}}"
-												type="{mapData>status}" text="{mapData>index}" click="onSpotClickItem"></vbm:Spot>
-										</vbm:items>
-									</vbm:Spots>
-								</vbm:vos>
-								<vbm:legend>
-									<vbm:Legend id="requestsLegend" caption="Requsts from citizens" items="{mapData>/spots}">
-										<vbm:items>
-											<vbm:LegendItem text="{='CRM ' + ${mapData>index} + ': ' + ${mapData>problem} }" semanticSpotType="{mapData>status}"
-												click="onLegendItemClick"/>
-										</vbm:items>
-									</vbm:Legend>
-								</vbm:legend>
-							</vbm:AnalyticMap>
-						</vk:content>
-					</vk:ContainerContent>
-				</vk:content>
-			</vk:MapContainer>
-=======
+<!--<<<<<<< HEAD-->
+<!--			<vk:MapContainer id="mapContainer" autoAdjustHeight="true">-->
+<!--				<vk:content>-->
+<!--					<vk:ContainerContent title="Analytic Map" icon="sap-icon://choropleth-chart">-->
+<!--						<vk:content>-->
+<!--							<vbm:AnalyticMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" openWindow="onOpenDetail"-->
+<!--								closeWindow="onCloseDetail" zoomChanged="onZoomChanged" regionClick="onRS">-->
+<!--								<vbm:vos>-->
+<!--									<vbm:Spots posChangeable="true" scaleChangeable="false" contextMenu="onSpotContextMenuItem" items="{ path: 'mapData>/spots'}">-->
+<!--										<vbm:items>-->
+<!--											<vbm:Spot position="{mapData>location}" tooltip="{= ${mapData>problem} + ' ' + ${mapData>description} + ' ' + ${mapData>custSurName}}"-->
+<!--												type="{mapData>status}" text="{mapData>index}" click="onSpotClickItem"></vbm:Spot>-->
+<!--										</vbm:items>-->
+<!--									</vbm:Spots>-->
+<!--								</vbm:vos>-->
+<!--								<vbm:legend>-->
+<!--									<vbm:Legend id="requestsLegend" caption="Requsts from citizens" items="{mapData>/spots}">-->
+<!--										<vbm:items>-->
+<!--											<vbm:LegendItem text="{='CRM ' + ${mapData>index} + ': ' + ${mapData>problem} }" semanticSpotType="{mapData>status}"-->
+<!--												click="onLegendItemClick"/>-->
+<!--										</vbm:items>-->
+<!--									</vbm:Legend>-->
+<!--								</vbm:legend>-->
+<!--							</vbm:AnalyticMap>-->
+<!--						</vk:content>-->
+<!--					</vk:ContainerContent>-->
+<!--				</vk:content>-->
+<!--			</vk:MapContainer>-->
+<!--=======-->
 			<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" zoomChanged="onZoomChanged">
 				<vbm:vos>
 					<vbm:Spots  posChangeable="true" scaleChangeable="false" contextMenu="onSpotContextMenuItem"
@@ -47,14 +47,14 @@
 					</vbm:Spots>
 				</vbm:vos>
 				<vbm:legend>
-					<vbm:Legend id="requestsLegend" caption="Requsts from citizens" items="{mapData>/spots}">
+					<vbm:Legend id="requestsLegend" caption="Жалобы жителей" items="{mapData>/spots}">
 						<vbm:items>
 							<vbm:LegendItem text="{='CRM ' + ${mapData>index} + ': ' + ${mapData>problem} }" semanticSpotType="{mapData>status}" click="onLegendItemClick"/>
 						</vbm:items>
 					</vbm:Legend>
 				</vbm:legend>
 			</vbm:GeoMap>
->>>>>>> refs/heads/master
+
 		</l:flexContent>
 	</l:FixFlex>
 </mvc:View>

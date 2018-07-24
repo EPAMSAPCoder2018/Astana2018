@@ -28,33 +28,33 @@ sap.ui.define([
 			var oModel = new JSONModel({
 				selectedKey : "All",
 				items : [{
-					name : "All",
+					name : "Все",
 					key : "All"
 				},{
-					name : "In Process",
+					name : "В работе",
 					key : "I"
 				},{
-					name : "Completed",
+					name : "Завершен",
 					key : "D"
 				},{
-					name : "Planned",
+					name : "Планируется",
 					key : "P"
 				}],
 				selectedDeviceKey : "All",
 				devices : [{
-					name : "All",
+					name : "Все",
 					key : "All"
 				},{
-					name : "Snowplow",
+					name : "Снегоочиститель",
 					key : "SNOWPLOW"
 				},{
-					name : "Salt spreader",
+					name : "Солеразбрасыватель",
 					key : "SALT_SPREADER"
 				},{
-					name : "Brushes",
+					name : "Щетки",
 					key : "BRUSH"
 				},{
-					name : "N/A",
+					name : "Не определено",
 					key : "NA"
 				}]
 			});
@@ -65,16 +65,16 @@ sap.ui.define([
 			var oModel = new JSONModel({
 				selectedKey : "All",
 				items : [{
-					name : "All",
+					name : "Все",
 					key : "All"
 				},{
-					name : "Active",
+					name : "В работе",
 					key : "Success"
 				},{
-					name : "Not Active",
+					name : "В ожидании",
 					key : "Warning"
 				},{
-					name : "Broken",
+					name : "Не исправна",
 					key : "Error"
 				}]
 			});
@@ -85,16 +85,16 @@ sap.ui.define([
 			var oModel = new JSONModel({
 				selectedKey : "All",
 				items : [{
-					name : "All",
+					name : "Все",
 					key : "All"
 				},{
-					name : "Done",
+					name : "Завершен",
 					key : "Success"
 				},{
-					name : "In process",
+					name : "В работе",
 					key : "Warning"
 				},{
-					name : "Open",
+					name : "Открыт",
 					key : "Error"
 				}]
 			});

@@ -16,9 +16,9 @@
 								<OverflowToolbarLayoutData priority="NeverOverflow" shrinkable="true"/>
 							</layoutData>
 							<items>
-								<IconTabFilter key="technics" text="Technics"></IconTabFilter>
-								<IconTabFilter key="routes" text="Orders"></IconTabFilter>
-								<IconTabFilter key="requests" text="Requests"></IconTabFilter>
+								<IconTabFilter key="technics" text="Техника"></IconTabFilter>
+								<IconTabFilter key="routes" text="Текущие работы"></IconTabFilter>
+								<IconTabFilter key="requests" text="Жалобы"></IconTabFilter>
 							</items>
 						</IconTabHeader>
 					</tnt:ToolHeader>

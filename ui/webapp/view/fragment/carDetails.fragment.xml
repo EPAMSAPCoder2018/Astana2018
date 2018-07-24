@@ -6,13 +6,13 @@
 				labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1"
 				columnsL="1" columnsM="1" singleContainerFullSize="true">
 				<f:content>
-					<Label text="Name"/>
+					<Label text="Название техники"/>
 					<Text text="{mapData>carName}"/>
-					<Label text="Model"/>
+					<Label text="Модель"/>
 					<Text text="{mapData>carModel}"/>
-					<Label text="VIN"/>
+					<Label text="ВИН-код"/>
 					<Text text="{mapData>VIN}"/>
-					<Label text="Average Speed"/>
+					<Label text="Средняя скорость"/>
 					<Text text="{mapData>avgSpeed}"/>
 				</f:content>
 			</f:SimpleForm>
@@ -20,7 +20,7 @@
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
-				<Button text="Resolve" press="handleEmailPress"/>
+				<Button text="Показать детали" press="handleEmailPress"/>
 			</Toolbar>
 		</footer>
 	</Popover>

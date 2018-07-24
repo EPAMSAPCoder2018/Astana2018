@@ -6,15 +6,15 @@
 				labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1"
 				columnsL="1" columnsM="1" singleContainerFullSize="true">
 				<f:content>
-					<Label text="Problem"/>
+					<Label text="Жалоба на"/>
 					<Text text="{mapData>problem}"/>
-					<Label text="Description"/>
+					<Label text="Описание проблемы"/>
 					<Text text="{mapData>description}"/>
-					<Label text="Customer"/>
+					<Label text="Поступила от"/>
 					<Text text="{mapData>custName} {mapData>custSurName}"/>
-					<Label text="Phone"/>
+					<Label text="Телефон"/>
 					<Text text="{mapData>phone}"/>
-					<Label text="Address"/>
+					<Label text="Адрес"/>
 					<Text text="{mapData>address}"/>
 				</f:content>
 			</f:SimpleForm>
@@ -22,7 +22,7 @@
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
-				<Button text="View Orders" press="handleEmailPress"/>
+				<Button text="Показать детали" press="handleEmailPress"/>
 			</Toolbar>
 		</footer>
 	</Popover>

@@ -1,0 +1,37 @@
+PROCEDURE "checkPointWithinOrder"(
+	IN iv_lat DOUBLE,
+	IN iv_long DOUBLE,
+	IN iv_order INTEGER,
+	OUT et_stages TABLE (
+		"stageId" INTEGER,
+		EXIST INTEGER
+	)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   READS SQL DATA AS
+BEGIN
+
+DECLARE lv_point NVARCHAR(255);
+DECLARE lv_exist INTEGER;
+
+lv_point = 'Point ('|| :iv_lat ||' '|| :iv_long ||')';
+
+et_stages = 
+SELECT "stageId", "coordinates".ST_Transform(1000004326).ST_Intersects(NEW ST_Point(:lv_point, 1000004326).ST_Buffer(15, 'meter')) "EXIST"
+	FROM "main.Vectors" WHERE "stageId" IN
+		( SELECT "stageId" FROM "main.Stages" WHERE "orderId" = :iv_order )
+;
+
+-- lt_vectors = 
+-- SELECT "stageId", "coordinates".ST_Transform(1000004326).ST_Intersects(NEW ST_Point(:lv_point, 1000004326).ST_Buffer(15, 'meter')) "EXIST"
+-- 	FROM "main.Vectors" WHERE "stageId" IN
+-- 		( SELECT "stageId" FROM "main.Stages" WHERE "orderId" = :iv_order )
+-- ;
+
+-- SELECT COUNT("isWithinStage") INTO lv_exist FROM :lt_vectors WHERE "isWithinStage" = 1;
+-- IF :lv_exist > 0 THEN
+-- 	SELECT TOP 1 "stageId" INTO ev_stage FROM :lt_vectors WHERE "isWithinStage" = 1 ORDER BY "stageId" DESC;
+-- END IF;
+
+END

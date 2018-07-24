@@ -15,14 +15,29 @@ DECLARE lv_status NVARCHAR(1);
 DECLARE lv_st INTEGER = 0;
 
 SELECT 0 INTO ev_result FROM DUMMY;
-
+/*
 lv_point = 'Point (' || :iv_long || ' ' || :iv_lat || ')';
 lt_stages = SELECT "stageId", "coordinates".ST_Transform(1000004326).ST_Contains(NEW ST_Point(:lv_point, 1000004326)) as EXIST FROM "main.Vectors" where "vectorId" IN 
 	 (SELECT "vectorId" FROM "main.Vectors" WHERE "stageId" IN (SELECT "stageId" FROM "main.Stages" where "orderId" = :iv_order AND "status.status" <> 'D'));
+*/
+CALL "checkPointWithinOrder"(
+	IV_LAT => :iv_lat,
+	IV_LONG => :iv_long,
+	IV_ORDER => :iv_order,
+	ET_STAGES => :lt_stagesForPoint
+);
+
+lt_stages =
+	SELECT T1."stageId" as "stageId", "EXIST" FROM :lt_stagesForPoint as T1
+		JOIN "main.Stages" T2 ON T1."stageId" = T2."stageId"
+		WHERE T2."stageId" = T1."stageId" AND T2."status.status" <> 'D';
+-- SELECT "stageId", "coordinates".ST_Transform(1000004326).ST_Contains(NEW ST_Point(:lv_point, 1000004326)) as EXIST FROM "main.Vectors" where "vectorId" IN 
+-- 	 (SELECT "vectorId" FROM "main.Vectors" WHERE "stageId" IN (SELECT "stageId" FROM "main.Stages" where "orderId" = :iv_order AND "status.status" <> 'D'));
+
 
 SELECT COUNT("stageId") INTO lv_stageId FROM :lt_stages WHERE "EXIST" = 1;
  IF lv_stageId <> 0 THEN
-	SELECT "stageId" INTO lv_stageId FROM :lt_stages WHERE "EXIST" = 1;
+	SELECT TOP 1 "stageId" INTO lv_stageId FROM :lt_stages WHERE "EXIST" = 1 ORDER BY "stageId" ASC;
 	SELECT "status.status" INTO lv_status FROM "main.Stages" WHERE "stageId" = :lv_stageId;
 	SELECT COUNT("stageId") INTO lv_st FROM "main.Stages" WHERE "status.status" = 'I' AND "stageId" IN (SELECT "stageId" FROM :lt_stages);
 	IF :lv_status = 'P' AND lv_st = 0 THEN
