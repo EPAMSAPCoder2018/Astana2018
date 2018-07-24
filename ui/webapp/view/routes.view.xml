@@ -1,38 +1,147 @@
 <mvc:View controllerName="com.epam.ui.controller.routes" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
-	xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" height="85%" displayBlock="true">
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:mc="sap.suite.ui.microchart"
+	xmlns:f="sap.ui.layout.form" xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" height="90%" displayBlock="true">
 	<OverflowToolbar>
-		<Button type="Up" text="Back" press="onBackButtonPress" visible="{mapData>/backButtonVisible}"/>
+		<Button type="Up" text="Back" press="onBackButtonPress" visible="{technicalModel>/isOrderOpened}"/>
 		<ToolbarSpacer/>
-		<Text text="Processed by:" class="sapUiSmallMargin" visible="{mapData>/backButtonVisible}"/>
-		<ComboBox class="sapUiSmallMarginEnd" visible="{mapData>/backButtonVisible}" items="{routesFiltersModel>/devices}" selectionChange="onDevicesFiltersChanged"
+		<Text text="Processed by:" class="sapUiSmallMargin" visible="{technicalModel>/isOrderOpened}"/>
+		<ComboBox visible="{technicalModel>/isOrderOpened}" items="{routesFiltersModel>/devices}" selectionChange="onDevicesFiltersChanged"
 			selectedKey="{routesFiltersModel>/selectedDeviceKey}">
 			<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
 		</ComboBox>
 		<Text text="Status:" class="sapUiSmallMargin"/>
-		<ComboBox class="sapUiSmallMarginEnd" items="{routesFiltersModel>/items}" selectionChange="onFiltersChanged"
-			selectedKey="{routesFiltersModel>/selectedKey}">
+		<ComboBox items="{routesFiltersModel>/items}" selectionChange="onFiltersChanged" selectedKey="{routesFiltersModel>/selectedKey}">
 			<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
 		</ComboBox>
 	</OverflowToolbar>
-	
-	<l:FixFlex>
-		<l:flexContent>
-			<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" vos="{path:'mapData>/results'}">
-				<vbm:vos>
-					<vbm:Routes templateShareable="false" items="{mapData>stages}">
-						<vbm:items>
-							<vbm:Route colorBorder="rgba(255,255,255,0.5)" linewidth="6" templateShareable="false" position="{mapData>vector/coordinates}" tooltip="{mapData>geoFromName} - {mapData>geoToName}" end="0" start="0" color="{mapData>color}" click="onClickRoute"/>
-						</vbm:items>
-					</vbm:Routes>
-				</vbm:vos>
-				<vbm:legend>
-					<vbm:Legend id="requestsLegend" caption="Orders" items="{mapData>/results}">
-						<vbm:items>
-							<vbm:LegendItem text="{= (${mapData>orinalOrder} !== undefined ? 'Order ' : 'Stage ') + ${mapData>index} + ': ' + ${mapData>createDate} }" color="{mapData>color}" click="onLegendItemClick"/>
-						</vbm:items>
-					</vbm:Legend>
-				</vbm:legend>
-			</vbm:GeoMap>
-		</l:flexContent>
-	</l:FixFlex>
+	<l:ResponsiveSplitter>
+		<l:PaneContainer orientation="Vertical">
+			<l:SplitPane requiredParentWidth="600">
+				<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651"
+					vos="{path:'mapData>/results', factory:'.vosFactoryFunction'}" zoomChanged="onZoomChanged">
+					<vbm:legend>
+						<vbm:Legend caption="Routes" items="{ path: 'mapData>/results', factory: '.legendFactoryFunction'}"></vbm:Legend>
+					</vbm:legend>
+				</vbm:GeoMap>
+			</l:SplitPane>
+			<l:SplitPane requiredParentWidth="400">
+				<l:BlockLayout>
+					<l:BlockLayoutRow>
+						<l:BlockLayoutCell>
+							<Table items="{mapData>/results}" showNoData="false" visible="{= ${technicalModel>/isOrderOpened}===false }">
+								<columns>
+									<Column width="2em"></Column>
+									<Column width="12em">
+										<Text text="ID"/>
+									</Column>
+									<Column minScreenWidth="Tablet" demandPopin="true">
+										<Text text="Status"/>
+									</Column>
+									<Column minScreenWidth="Tablet" demandPopin="true">
+										<Text text="Assigned Car"/>
+									</Column>
+									<Column minScreenWidth="Tablet" demandPopin="true">
+										<Text text="Creation Date"/>
+									</Column>
+									<Column minScreenWidth="Tablet" demandPopin="true">
+										<Text text="Distance"/>
+									</Column>
+									<Column minScreenWidth="Desktop" demandPopin="true">
+										<Text text="Completeness"/>
+									</Column>
+								</columns>
+								<items>
+									<ColumnListItem>
+										<cells>
+											<core:HTML
+												content="{= '&lt;div style=\'position:relative; border: 1px solid lightgray; background-color:' + ${mapData>color} + '; width:20px; height:20px;\'&gt;&lt;/div&gt;'}"/>
+											<Text text="{mapData>id}"/>
+											<Text text="{mapData>status}"/>
+											<Text text="{= ${mapData>car} !== undefined ? (${mapData>car/carId} + '\nVIN : ' + ${mapData>car/VIN}): ${mapData>carId}}"/>
+											<Text text="{mapData>createDate}"/>
+											<Text text="{mapData>distance} m"/>
+											<ProgressIndicator percentValue="{= ${mapData>status} === 'I' ? (${mapData>index}*15) : 0}"
+												displayValue="{= ${mapData>status} === 'I' ? (${mapData>index}*15) + '%' : '0%'}" showValue="true"
+												state="{= ${mapData>status} === 'I' ? ((${mapData>index}*15) > 59 ? 'Warning' : 'Error') : 'None'}"/>
+										</cells>
+									</ColumnListItem>
+								</items>
+							</Table>
+							<l:ResponsiveSplitter visible="{technicalModel>/isOrderOpened}">
+								<l:PaneContainer orientation="Horizontal">
+									<l:SplitPane requiredParentWidth="600"><Text text="Left"/>
+										<f:Form editable="false" id="orderDatails">
+											<f:title>
+												<core:Title text="Order Details"/>
+											</f:title>
+											<f:layout>
+												<f:ResponsiveGridLayout labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4"
+													emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false"/>
+											</f:layout>
+											<f:formContainers>
+												<f:FormContainer>
+													<f:formElements>
+														<f:FormElement label="ID">
+															<f:fields>
+																<Text text="{mapData>id}"/>
+															</f:fields>
+														</f:FormElement>
+														<f:FormElement label="Status">
+															<f:fields>
+																<Text text="{mapData>status}"/>
+															</f:fields>
+														</f:FormElement>
+														<f:FormElement label="Assigned Car">
+															<f:fields>
+																<Text text="{= ${mapData>carId}}"/>
+															</f:fields>
+														</f:FormElement>
+														<f:FormElement label="Distance">
+															<f:fields>
+																<Text text="{mapData>distance}"/>
+															</f:fields>
+														</f:FormElement>
+													</f:formElements>
+												</f:FormContainer>
+											</f:formContainers>
+										</f:Form>
+									</l:SplitPane>
+									<l:SplitPane requiredParentWidth="600"><Text text="Right"/>
+										<Panel class="ChartsPanel" headerText="Processed">
+											<Table>
+												<columns>
+													<Column demandPopin="true" minScreenWidth="Tablet">
+														<Text text="Overall"/>
+													</Column>
+													<Column demandPopin="true" minScreenWidth="Tablet">
+														<Text text="By Snowplow"/>
+													</Column>
+													<Column demandPopin="true" minScreenWidth="Tablet">
+														<Text text="By Brush"/>
+													</Column>
+													<Column demandPopin="true" minScreenWidth="Tablet">
+														<Text text="By Salt-spreader"/>
+													</Column>
+												</columns>
+												<items>
+													<ColumnListItem>
+														<cells>
+															<mc:RadialMicroChart size="L" percentage="64" custom:name="All" valueColor="rgb(0,255,0)" press="onChartClick"/>
+															<mc:RadialMicroChart size="L" percentage="41" custom:name="SNOWPLOW" valueColor="rgb(0,128,255)" press="onChartClick"/>
+															<mc:RadialMicroChart size="L" percentage="31" custom:name="BRUSH" valueColor="rgb(255,128,0)" press="onChartClick"/>
+															<mc:RadialMicroChart size="L" percentage="34" custom:name="SALT_SPREADER" valueColor="rgb(255,0,255)" press="onChartClick"/>
+														</cells>
+													</ColumnListItem>
+												</items>
+											</Table>
+										</Panel>
+									</l:SplitPane>
+								</l:PaneContainer>
+							</l:ResponsiveSplitter>
+						</l:BlockLayoutCell>
+					</l:BlockLayoutRow>
+				</l:BlockLayout>
+			</l:SplitPane>
+		</l:PaneContainer>
+	</l:ResponsiveSplitter>
 </mvc:View>

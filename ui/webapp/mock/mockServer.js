@@ -13,7 +13,23 @@ sap.ui.define([
 				method: "GET",
 				path: new RegExp("getOrders\.xsjs"),
 				response: function (oXhr) {
-					oXhr.respondJSON(200, {}, JSON.stringify(getData("getOrders.json")));
+					oXhr.respondJSON(200, {}, JSON.stringify(getData("getAllOrders.json")));
+					return true;
+				}
+			}, {
+				method: "GET",
+				path: new RegExp("getAllCars\.xsjs"),
+				response: function (oXhr) {
+					oXhr.respondJSON(200, {}, JSON.stringify(getData("getAllCars.json")));
+					return true;
+				}
+			}, {
+				method: "GET",
+				path: new RegExp("getAllStages\.xsjs\\?orderId=(.*)"),
+				response: function (oXhr, orderId) {
+					var orderId = parseInt(orderId);
+					var data = getData("getAllStages.json");
+					oXhr.respondJSON(200, {}, JSON.stringify(data[orderId]));
 					return true;
 				}
 			}, {
@@ -30,7 +46,7 @@ sap.ui.define([
 					oXhr.respondJSON(200, {}, JSON.stringify(getData("getCarsCurrentPositions.json")));
 					return true;
 				}
-			},{
+			}, {
 				method: "GET",
 				path: new RegExp("getDevicesStatisticsByOrder\.xsjs\\?orderId=(.*)"),
 				response: function (oXhr, orderId) {

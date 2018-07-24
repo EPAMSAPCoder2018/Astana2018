@@ -36,12 +36,6 @@ if (response.body) {
 
 var changeStageStatus = connection.loadProcedure("changeStageStatus");
 var isChanged = changeStageStatus(res[0].C_LATITUDE, res[0].C_LONGITUDE, orderId);
-if (!isChanged.EV_RESULT) {
-	$.response.contentType = "application/json; charset=UTF-8";
-	$.response.setBody("All the stages are up to date");
-	$.response.status = $.net.http.OK;
-} else {
-	$.response.contentType = "application/json; charset=UTF-8";
-	$.response.setBody(isChanged.EV_RESULT + ' stage(s) updated');
-	$.response.status = $.net.http.OK;
-}
+$.xs.requestUtil.prepareResponse({
+	results: !isChanged.EV_RESULT ? "All the stages are up to date" : (isChanged.EV_RESULT + ' stage(s) updated')
+});

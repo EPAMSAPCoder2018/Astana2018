@@ -13,13 +13,6 @@ sap.ui.define([
 						"id": "s1",
 						"url": "https://mt.google.com/vt/lyrs=m&x={X}&y={Y}&z={LOD}"
 					}]
-				},
-				{
-					"name": "YMAP",
-					"Source": [{
-						"id": "s2",
-						"url": "http://vec04.maps.yandex.net/tiles?l=map&v=2.44.0&x={X}&y={Y}&z={LOD}"
-					}]
 				}],
 				"MapLayerStacks": [{
 					"name": "DEFAULT",
@@ -29,33 +22,32 @@ sap.ui.define([
 						"opacity": "1",
 						"colBkgnd": "RGB(255,255,255)"
 					}
-				},
-				{
-					"name": "DEFAULT1",
-					"MapLayer": {
-						"name": "layer2",
-						"refMapProvider": "YMAP",
-						"opacity": "1",
-						"colBkgnd": "RGB(255,255,255)"
-					}
 				}]
 			};
-			
 			oMap.setMapConfiguration(oMapConfig);
 			oMap.setRefMapLayerStack("DEFAULT");
+			if(this.MODELS){
+				var modelsNames = Object.keys(this.MODELS);
+				for(var i=0; i < modelsNames.length; i++){
+					this.getView().setModel(this.MODELS[modelsNames[i]], modelsNames[i]);
+				}
+			}
 		},
 
 		onAfterRendering: function () {
 			var oMap = this.getMapControl();
 			if (!this._spotDetailPointer) {
-				var textView = new Text(this.createId("SpotDetailPointer"));
-				var contentId = oMap.getId() + "-geoscene-winlayer";
-				var cont = document.getElementById(contentId);
-				var rm = sap.ui.getCore().createRenderManager();
-				rm.renderControl(textView);
-				rm.flush(cont);
-				rm.destroy();
-				this._spotDetailPointer = textView;
+				var that = this;
+				setTimeout(function(){
+					var textView = new Text(that.createId("SpotDetailPointer"));
+					var contentId = oMap.getId() + "-geoscene-winlayer";
+					var cont = document.getElementById(contentId);
+					var rm = sap.ui.getCore().createRenderManager();
+					rm.renderControl(textView);
+					rm.flush(cont);
+					rm.destroy();
+					that._spotDetailPointer = textView;
+				},1000);
 			}
 		},
 

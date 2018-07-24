@@ -1,0 +1,19 @@
+PROCEDURE "getFullOrders" (IN orderId Integer, OUT result "tableTypes.StageFullInfo")
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   READS SQL DATA AS
+BEGIN
+	result = SELECT 
+		S."stageId" "id",
+		"status.status" "status",
+		"geoFrom".ST_AsGeoJSON() as "geoFrom", 
+		"geoFromName",
+		"geoTo".ST_AsGeoJSON() as "geoTo",
+		"geoToName",
+		V."vectorId",
+		V."coordinates".ST_AsGeoJSON() as "coordinates"
+	FROM "main.Stages" S
+	INNER JOIN "main.Vectors" V ON V."stageId"=S."stageId"
+	WHERE "orderId" = :orderId
+	ORDER BY 1 ASC;
+END

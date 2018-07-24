@@ -1,4 +1,4 @@
-PROCEDURE "getFullOrders" (OUT result "tableTypes.OrderInfo")
+PROCEDURE "getFullStages" (OUT result "tableTypes.OrderInfo")
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    READS SQL DATA AS

@@ -15,7 +15,7 @@ if (response.body) {
 	if (car.isNewlyRegistered) {
 		
 		//{"CARID":"gpsCar","C_LONGITUDE":53.90757000000001,"C_LATITUDE":27.627530000000004,"C_ORDERID":1000000001,"C_TIMESTAMP":"2018-06-27T12:43:16.000Z"}
-		var carParams = [carId, 'A', 'LIC 876', 'MAZ', '5449', 'VIN54463d412cb4e449', '30'];
+		var carParams = [carId, 'A', 'LIC 876', 'MAZ', '5449', ('VIN' + carId), '30', '1'];
 		var connection = $.xs.dbUtil.getConnection();
 		// INSERT INTO "main.Car" VALUES(
 		// 	'54463d412cb4e449',--/*carId <NVARCHAR(50)>*/,

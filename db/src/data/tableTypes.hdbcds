@@ -1,5 +1,6 @@
 context tableTypes {
     table type StageInfo {
+    	orderId : Integer;
         stageId : Integer;
         geoFrom : String(50);
         geoTo   : String(50);
@@ -18,6 +19,17 @@ context tableTypes {
         "avgSpeed" : Decimal(5, 2);
         "stageId"     : Integer;
         "stageStatus": String(1);
+        "geoFrom"     : String(200);
+        "geoFromName" : String(100);
+        "geoTo"       :  String(200);
+        "geoToName"   : String(100);
+        "vectorId"    : Integer;
+        "coordinates" : String(5000);
+    }
+    
+    table type StageFullInfo {
+        "id"          : Integer;
+        "status"      : String(1);
         "geoFrom"     : String(200);
         "geoFromName" : String(100);
         "geoTo"       :  String(200);

@@ -7,6 +7,7 @@
 	</ComboBox>
 	<l:FixFlex>
 		<l:flexContent>
+<<<<<<< HEAD
 			<vk:MapContainer id="mapContainer" autoAdjustHeight="true">
 				<vk:content>
 					<vk:ContainerContent title="Analytic Map" icon="sap-icon://choropleth-chart">
@@ -34,6 +35,26 @@
 					</vk:ContainerContent>
 				</vk:content>
 			</vk:MapContainer>
+=======
+			<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" zoomChanged="onZoomChanged">
+				<vbm:vos>
+					<vbm:Spots  posChangeable="true" scaleChangeable="false" contextMenu="onSpotContextMenuItem"
+						items="{ path: 'mapData>/spots'}">
+						<vbm:items>
+							<vbm:Spot position="{mapData>location}" tooltip="{= ${mapData>problem} + ' ' + ${mapData>description} + ' ' + ${mapData>custSurName}}"
+								type="{mapData>status}" text="{mapData>index}" click="onSpotClickItem"></vbm:Spot>
+						</vbm:items>
+					</vbm:Spots>
+				</vbm:vos>
+				<vbm:legend>
+					<vbm:Legend id="requestsLegend" caption="Requsts from citizens" items="{mapData>/spots}">
+						<vbm:items>
+							<vbm:LegendItem text="{='CRM ' + ${mapData>index} + ': ' + ${mapData>problem} }" semanticSpotType="{mapData>status}" click="onLegendItemClick"/>
+						</vbm:items>
+					</vbm:Legend>
+				</vbm:legend>
+			</vbm:GeoMap>
+>>>>>>> refs/heads/master
 		</l:flexContent>
 	</l:FixFlex>
 </mvc:View>
