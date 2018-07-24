@@ -9,7 +9,7 @@ sap.ui.define([
 			BaseController.prototype.onInit.apply(this, arguments);
 			var mapDataModel = Models.createMapDataModel();
 			mapDataModel.setData({
-				spots : []
+				spots: []
 			});
 			this.getView().setModel(Models.createRequestFiltersModel(), "requestsFiltersModel");
 			this.getView().setModel(mapDataModel, "mapData");
@@ -44,6 +44,20 @@ sap.ui.define([
 			oMap.setZoomlevel(15);
 		},
 
+		onRS: function (evt) {
+			var oModel = this.getView().getModel();
+			var lons = [];
+			var lats = [];
+
+			if (lons.length && lats.length) {
+				if (lons.length == 1 && lats.length == 1) {
+					this.oVBI.zoomToGeoPosition(lons, lats, 5);
+				} else {
+					this.oVBI.zoomToGeoPosition(lons, lats);
+				}
+			}
+		},
+
 		onFiltersChanged: function (evt) {
 			var oMap = this.getMapControl();
 			var oMapLegend = this.getMapLegend();
@@ -60,8 +74,8 @@ sap.ui.define([
 				binding.filter([oFilterStatus]);
 			}
 		},
-		
-		onHideView : function(evt){
+
+		onHideView: function (evt) {
 			this._mapDataLoadingTask.stop();
 		},
 

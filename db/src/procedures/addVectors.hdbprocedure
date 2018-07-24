@@ -3,5 +3,5 @@ PROCEDURE "addVectors" (IN vectors Table("stageId" INTEGER, "vector" NCLOB))
    SQL SECURITY INVOKER
    AS
 BEGIN
-   INSERT INTO "main.Vectors"("stageId", "coordinates") SELECT "stageId", new ST_MULTIPOINT("vector") FROM :vectors;
+   INSERT INTO "main.Vectors"("stageId", "coordinates") SELECT "stageId", new ST_LineString("vector") FROM :vectors;
 END

@@ -30,11 +30,11 @@ for(var i=0; i < stages.length; i++){
 	vectors.push(stage);
 }
 
-var insertVactorsStatement = 'INSERT INTO "main.Vectors"("stageId", "coordinates") VALUES(?, new ST_MultiPoint(?))';
+var insertVactorsStatement = 'INSERT INTO "main.Vectors"("stageId", "coordinates") VALUES(?, new ST_LineString(?))';
 var deleteVactorsStatement = 'DELETE FROM "main.Vectors" WHERE "stageId" IN (' + (new Array(stagesIds.length)).fill('?') + ')';
 var argsArray = [];
 vectors.forEach(function(vector){
-	argsArray.push({stageId:vector.stageId, vector:'MultiPoint Z((' + vector.vector.join("),(") + '))'});
+	argsArray.push({stageId:vector.stageId, vector:'LineString Z(' + vector.vector.join(", ") + ')'});
 });
 connection.executeUpdate.apply(connection, [deleteVactorsStatement].concat(stagesIds));
 var addVectorsProc = connection.loadProcedure("addVectors");
