@@ -28,7 +28,7 @@ sap.ui.define([
 			var oModel = new JSONModel({
 				selectedKey : "All",
 				items : [{
-					name : "Все",
+					name : "All",
 					key : "All"
 				},{
 					name : "В работе",
@@ -62,19 +62,20 @@ sap.ui.define([
 		},
 		
 		createTechnicFiltersModel: function() {
+			var i18n = this.getOwnerComponent().getModel("i18n");
 			var oModel = new JSONModel({
 				selectedKey : "All",
 				items : [{
-					name : "Все",
+					name : i18n.getProperty("All"),
 					key : "All"
 				},{
-					name : "В работе",
+					name : i18n.getProperty("Works"),
 					key : "Success"
 				},{
-					name : "В ожидании",
+					name : i18n.getProperty("OnHold"),
 					key : "Warning"
 				},{
-					name : "Не исправна",
+					name : i18n.getProperty("Broken"),
 					key : "Error"
 				}]
 			});
@@ -82,19 +83,20 @@ sap.ui.define([
 		},
 		
 		createRequestFiltersModel: function() {
+			var i18n = this.getOwnerComponent().getModel("i18n");
 			var oModel = new JSONModel({
 				selectedKey : "All",
 				items : [{
-					name : "Все",
+					name : i18n.getProperty("All"),
 					key : "All"
 				},{
-					name : "Завершен",
+					name : i18n.getProperty("Done"),
 					key : "Success"
 				},{
-					name : "В работе",
+					name : i18n.getProperty("Works"),
 					key : "Warning"
 				},{
-					name : "Открыт",
+					name : i18n.getProperty("Open"),
 					key : "Error"
 				}]
 			});

@@ -1,0 +1,15 @@
+{
+  "welcomeFile": "/uitechnics/index.html",
+  "authenticationMethod": "route",
+	"logout": {
+		"logoutEndpoint": "/do/logout"
+	},
+	"routes": [{
+		"source": "/services/(.*).xsjs",
+		"destination": "xs_api"
+	}, {
+		"source": "^/uitechnics/(.*)$",
+		"target": "$1",
+		"localDir": "webapp"
+	}]
+}

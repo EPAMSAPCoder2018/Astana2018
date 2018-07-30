@@ -1,6 +1,6 @@
 <mvc:View controllerName="com.epam.ui.controller.requests" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
 	xmlns:vbm="sap.ui.vbm" xmlns:vk="sap.ui.vk" xmlns:l="sap.ui.layout" height="85%" displayBlock="true">
-	<Text text="Статус:" class="sapUiSmallMargin"/>
+	<Text text="{i18n>Status}" class="sapUiSmallMargin"/>
 	<ComboBox class="sapUiSmallMarginEnd" items="{requestsFiltersModel>/items}" selectionChange="onFiltersChanged"
 		selectedKey="{requestsFiltersModel>/selectedKey}">
 		<core:Item key="{requestsFiltersModel>key}" text="{requestsFiltersModel>name}"/>
@@ -47,7 +47,7 @@
 					</vbm:Spots>
 				</vbm:vos>
 				<vbm:legend>
-					<vbm:Legend id="requestsLegend" caption="Жалобы жителей" items="{mapData>/spots}">
+					<vbm:Legend id="requestsLegend" caption="{i18n>CRMRequests}" items="{mapData>/spots}">
 						<vbm:items>
 							<vbm:LegendItem text="{='CRM ' + ${mapData>index} + ': ' + ${mapData>problem} }" semanticSpotType="{mapData>status}" click="onLegendItemClick"/>
 						</vbm:items>

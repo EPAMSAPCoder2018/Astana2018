@@ -2,14 +2,14 @@
 	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:mc="sap.suite.ui.microchart"
 	xmlns:f="sap.ui.layout.form" xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" height="90%" displayBlock="true">
 	<OverflowToolbar>
-		<Button type="Up" text="Назад" press="onBackButtonPress" visible="{technicalModel>/isOrderOpened}"/>
+		<Button type="Up" text="{i18n>Back}" press="onBackButtonPress" visible="{technicalModel>/isOrderOpened}"/>
 		<ToolbarSpacer/>
-		<Text text="Обработано:" class="sapUiSmallMargin" visible="{technicalModel>/isOrderOpened}"/>
+		<Text text="{i18n>ProcessedBy}" class="sapUiSmallMargin" visible="{technicalModel>/isOrderOpened}"/>
 		<ComboBox visible="{technicalModel>/isOrderOpened}" items="{routesFiltersModel>/devices}" selectionChange="onDevicesFiltersChanged"
 			selectedKey="{routesFiltersModel>/selectedDeviceKey}">
 			<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
 		</ComboBox>
-		<Text text="Статус:" class="sapUiSmallMargin"/>
+		<Text text="{i18n>Status}" class="sapUiSmallMargin"/>
 		<ComboBox items="{routesFiltersModel>/items}" selectionChange="onFiltersChanged" selectedKey="{routesFiltersModel>/selectedKey}">
 			<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
 		</ComboBox>
@@ -20,7 +20,7 @@
 				<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651"
 					vos="{path:'mapData>/results', factory:'.vosFactoryFunction'}" zoomChanged="onZoomChanged">
 					<vbm:legend>
-						<vbm:Legend caption="Заказы" items="{ path: 'mapData>/results', factory: '.legendFactoryFunction'}"></vbm:Legend>
+						<vbm:Legend caption="{i18n>Orders}" items="{ path: 'mapData>/results', factory: '.legendFactoryFunction'}"></vbm:Legend>
 					</vbm:legend>
 				</vbm:GeoMap>
 			</l:SplitPane>
@@ -32,22 +32,22 @@
 								<columns>
 									<Column width="2em"></Column>
 									<Column width="12em">
-										<Text text="Заказ №"/>
+										<Text text="{i18n>OrderNum}"/>
 									</Column>
 									<Column minScreenWidth="Tablet" demandPopin="true">
-										<Text text="Статус"/>
+										<Text text="{i18n>OrderStatus}"/>
 									</Column>
 									<Column minScreenWidth="Tablet" demandPopin="true">
-										<Text text="Связанная техника"/>
+										<Text text="{i18n>OrderTechnics}"/>
 									</Column>
 									<Column minScreenWidth="Tablet" demandPopin="true">
-										<Text text="Дата"/>
+										<Text text="{i18n>OrderDate}"/>
 									</Column>
 									<Column minScreenWidth="Tablet" demandPopin="true">
-										<Text text="Расстояние"/>
+										<Text text="{i18n>OrderDistance}"/>
 									</Column>
 									<Column minScreenWidth="Desktop" demandPopin="true">
-										<Text text="Завершенность"/>
+										<Text text="{i18n>OrderCompl}"/>
 									</Column>
 								</columns>
 								<items>
@@ -72,7 +72,7 @@
 									<l:SplitPane requiredParentWidth="600"><Text text="Left"/>
 										<f:Form editable="false" id="orderDatails">
 											<f:title>
-												<core:Title text="Детали заказа"/>
+												<core:Title text="{i18n>OrderDetails}"/>
 											</f:title>
 											<f:layout>
 												<f:ResponsiveGridLayout labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4"
@@ -81,22 +81,22 @@
 											<f:formContainers>
 												<f:FormContainer>
 													<f:formElements>
-														<f:FormElement label="Заказ №">
+														<f:FormElement label="{i18n>OrderNum}">
 															<f:fields>
 																<Text text="{mapData>id}"/>
 															</f:fields>
 														</f:FormElement>
-														<f:FormElement label="Статус">
+														<f:FormElement label="{i18n>OrderStatus}">
 															<f:fields>
 																<Text text="{mapData>status}"/>
 															</f:fields>
 														</f:FormElement>
-														<f:FormElement label="Связанная техника">
+														<f:FormElement label="{i18n>OrderTechnics}">
 															<f:fields>
 																<Text text="{= ${mapData>carId}}"/>
 															</f:fields>
 														</f:FormElement>
-														<f:FormElement label="Расстояние">
+														<f:FormElement label="{i18n>OrderDistance}">
 															<f:fields>
 																<Text text="{mapData>distance}"/>
 															</f:fields>
@@ -107,20 +107,20 @@
 										</f:Form>
 									</l:SplitPane>
 									<l:SplitPane requiredParentWidth="600"><Text text="Right"/>
-										<Panel class="ChartsPanel" headerText="Обработано">
+										<Panel class="ChartsPanel" headerText="{i18n>ProcessedBy}">
 											<Table>
 												<columns>
 													<Column demandPopin="true" minScreenWidth="Tablet">
-														<Text text="В целом"/>
+														<Text text="{i18n>ProcessedAtAll}"/>
 													</Column>
 													<Column demandPopin="true" minScreenWidth="Tablet">
-														<Text text="Снегоочистителем"/>
+														<Text text="{i18n>ProcessedSnow}"/>
 													</Column>
 													<Column demandPopin="true" minScreenWidth="Tablet">
-														<Text text="Щетками"/>
+														<Text text="{i18n>ProcessedBrushes}"/>
 													</Column>
 													<Column demandPopin="true" minScreenWidth="Tablet">
-														<Text text="Солеразбрасывателем"/>
+														<Text text="{i18n>ProcessedSalt}"/>
 													</Column>
 												</columns>
 												<items>

@@ -3,7 +3,7 @@
 	"sap.app": {
 		"id": "com.epam.ui",
 		"type": "application",
-		"i18n": "i18n/i18n.properties",
+		"i18n": "i18n/i18n_ru.properties",
 		"applicationVersion": {
 			"version": "1.0.0"
 		},
@@ -62,7 +62,7 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "com.epam.ui.i18n.i18n"
+					"bundleName": "com.epam.ui.i18n.i18n_ru"
 				}
 			}
 		},

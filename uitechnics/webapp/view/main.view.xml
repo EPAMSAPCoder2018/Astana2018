@@ -1,0 +1,42 @@
+<mvc:View controllerName="com.epam.uitechnics.controller.main" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
+	xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" height="100%" displayBlock="true">
+	<App>
+		<pages>
+			<Page showHeader="true" enableScrolling="false" title="{i18n>AvailableTechnics}">
+				<content>
+					<l:FixFlex fixFirst="true" minFlexSize="400" vertical="true">
+						<l:fixContent>
+							<Text text="{i18n>Status}" class="sapUiSmallMargin"/>
+							<ComboBox class="sapUiSmallMarginEnd" items="{technicsFiltersModel>/items}" selectionChange="onFiltersChanged"
+								selectedKey="{technicsFiltersModel>/selectedKey}">
+								<core:Item key="{technicsFiltersModel>key}" text="{technicsFiltersModel>name}"/>
+							</ComboBox>
+						</l:fixContent>
+						<l:flexContent>
+							<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651" zoomChanged="onZoomChanged">
+								<vbm:vos>
+									<vbm:Spots posChangeable="true" scaleChangeable="false" contextMenu="onSpotContextMenuItem" items="{ path: 'mapData>/spots'}">
+										<vbm:items>
+											<vbm:Spot position="{mapData>location}" tooltip="{= ${mapData>carName} + ' ' + ${mapData>carModel} + ' ' + ${mapData>VIN}}"
+												type="{mapData>status}" text="{mapData>index}" click="onSpotClickItem"></vbm:Spot>
+										</vbm:items>
+									</vbm:Spots>
+								</vbm:vos>
+								<vbm:legend>
+									<vbm:Legend id="technicsLegend" caption="{i18n>AvailableTechnics}" items="{mapData>/spots}">
+										<vbm:items>
+											<vbm:LegendItem text="{='Car ' + ${mapData>index}}" semanticSpotType="{mapData>status}" click="onLegendItemClick"/>
+										</vbm:items>
+									</vbm:Legend>
+								</vbm:legend>
+							</vbm:GeoMap>
+						</l:flexContent>
+					</l:FixFlex>
+				</content>
+				<footer>
+					<Toolbar></Toolbar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>
