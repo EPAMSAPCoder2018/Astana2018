@@ -1,15 +1,42 @@
 sap.ui.define([
-	"com/epam/ui/controller/base.controller",
+	"sap/ui/core/mvc/Controller",
 	'sap/m/Text',
-	"com/epam/ui/model/models"
-], function (BaseController, Text, Models) {
+	"com/epam/uitechnics/model/models"
+], function (Controller, Text, Models) {
 	"use strict";
-	return BaseController.extend("com.epam.ui.controller.technics", {
+
+	return Controller.extend("com.epam.uitechnics.controller.main", {
 		onInit: function () {
-			BaseController.prototype.onInit.apply(this, arguments);
+			var oMap = this.getMapControl();
+			var oMapConfig = {
+				"MapProvider": [{
+					"name": "GMAP",
+					"Source": [{
+						"id": "s1",
+						"url": "https://mt.google.com/vt/lyrs=m&x={X}&y={Y}&z={LOD}"
+					}]
+				}],
+				"MapLayerStacks": [{
+					"name": "DEFAULT",
+					"MapLayer": {
+						"name": "layer1",
+						"refMapProvider": "GMAP",
+						"opacity": "1",
+						"colBkgnd": "RGB(255,255,255)"
+					}
+				}]
+			};
+			oMap.setMapConfiguration(oMapConfig);
+			oMap.setRefMapLayerStack("DEFAULT");
+			if (this.MODELS) {
+				var modelsNames = Object.keys(this.MODELS);
+				for (var i = 0; i < modelsNames.length; i++) {
+					this.getView().setModel(this.MODELS[modelsNames[i]], modelsNames[i]);
+				}
+			}
 			var mapDataModel = Models.createMapDataModel();
 			mapDataModel.setData({
-				spots : []
+				spots: []
 			});
 			this.getView().setModel(Models.createTechnicFiltersModel.apply(this), "technicsFiltersModel");
 			this.getView().setModel(mapDataModel, "mapData");
@@ -37,20 +64,39 @@ sap.ui.define([
 			}, 5000);
 		},
 
-		onHideView: function (evt) {
-			this._mapDataLoadingTask.stop();
-		},
-		
 		onAfterRendering: function () {
-			BaseController.prototype.onAfterRendering.apply(this, arguments);
+			var oMap = this.getMapControl();
+			if (!this._spotDetailPointer) {
+				var that = this;
+				setTimeout(function () {
+					var textView = new Text(that.createId("SpotDetailPointer"));
+					var contentId = oMap.getId() + "-geoscene-winlayer";
+					var cont = document.getElementById(contentId);
+					var rm = sap.ui.getCore().createRenderManager();
+					rm.renderControl(textView);
+					rm.flush(cont);
+					rm.destroy();
+					that._spotDetailPointer = textView;
+				}, 1000);
+			}
+
 			this._mapDataLoadingTask.start();
 		},
 
-		onLegendItemClick: function (evt) {
-			var oMap = this.getMapControl();
-			var car = evt.getSource().getBindingContext("mapData").getProperty();
-			oMap.setCenterPosition(car.location.replace(";0", ""));
-			oMap.setZoomlevel(15);
+		onZoomChanged: function (evt) {
+			if (this._oPopover) {
+				this._oPopover.close();
+			}
+		},
+
+		onExit: function () {
+			if (this._oPopover) {
+				this._oPopover.destroy();
+			}
+		},
+
+		getMapControl: function () {
+			return this.getView().byId("vbi");
 		},
 
 		onFiltersChanged: function (evt) {
@@ -83,7 +129,7 @@ sap.ui.define([
 			marker.style.top = pos.y + "px";
 			var oMap = this.getMapControl();
 			if (!that._oPopover) {
-				that._oPopover = sap.ui.xmlfragment("com.epam.ui.view.fragment.carDetails", that);
+				that._oPopover = sap.ui.xmlfragment("com.epam.uitechnics.view.fragment.carDetails", that);
 				that.getView().addDependent(that._oPopover);
 			}
 			that._oPopover.bindElement({
@@ -97,9 +143,35 @@ sap.ui.define([
 			}, 1);
 		},
 
-		handleEmailPress: function (oEvent) {
-			this._oPopover.close();
-			MessageToast.show("E-Mail has been sent");
+		getMapLegend: function () {
+			return this.getMapControl().getLegend();
+		},
+
+		onLegendItemClick: function (evt) {
+			var oMap = this.getMapControl();
+			var crmRequest = evt.getSource().getBindingContext("mapData").getProperty();
+			oMap.setCenterPosition(crmRequest.location.replace("; 0", ""));
+			oMap.setZoomlevel(15);
+		},
+
+		createPeriodicalyTask: function (taskToExecute, delay) {
+			var timer;
+			var start = function () {
+				function run() {
+					taskToExecute();
+					timer = setTimeout(run, delay);
+				};
+				timer = setTimeout(run, 1);
+			};
+			return {
+				start: start,
+				stop: function () {
+					if (timer) {
+						clearTimeout(timer);
+						timer = null;
+					}
+				}
+			};
 		}
 	});
 });

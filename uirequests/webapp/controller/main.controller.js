@@ -1,12 +1,39 @@
 sap.ui.define([
-	"com/epam/ui/controller/base.controller",
+	"sap/ui/core/mvc/Controller",
 	'sap/m/Text',
-	"com/epam/ui/model/models"
-], function (BaseController, Text, Models) {
+	"com/epam/uirequests/model/models"
+], function (Controller, Text, Models) {
 	"use strict";
-	return BaseController.extend("com.epam.ui.controller.technics", {
+
+	return Controller.extend("com.epam.uirequests.controller.main", {
 		onInit: function () {
-			BaseController.prototype.onInit.apply(this, arguments);
+			var oMap = this.getMapControl();
+			var oMapConfig = {
+				"MapProvider": [{
+					"name": "GMAP",
+					"Source": [{
+						"id": "s1",
+						"url": "https://mt.google.com/vt/lyrs=m&x={X}&y={Y}&z={LOD}"
+					}]
+				}],
+				"MapLayerStacks": [{
+					"name": "DEFAULT",
+					"MapLayer": {
+						"name": "layer1",
+						"refMapProvider": "GMAP",
+						"opacity": "1",
+						"colBkgnd": "RGB(255,255,255)"
+					}
+				}]
+			};
+			oMap.setMapConfiguration(oMapConfig);
+			oMap.setRefMapLayerStack("DEFAULT");
+			if (this.MODELS) {
+				var modelsNames = Object.keys(this.MODELS);
+				for (var i = 0; i < modelsNames.length; i++) {
+					this.getView().setModel(this.MODELS[modelsNames[i]], modelsNames[i]);
+				}
+			}
 			var mapDataModel = Models.createMapDataModel();
 			mapDataModel.setData({
 				spots: []
@@ -37,27 +64,41 @@ sap.ui.define([
 			}, 5000);
 		},
 
-		onLegendItemClick: function (evt) {
+		onAfterRendering: function () {
 			var oMap = this.getMapControl();
-			var crmRequest = evt.getSource().getBindingContext("mapData").getProperty();
-			oMap.setCenterPosition(crmRequest.location.replace("; 0", ""));
-			oMap.setZoomlevel(15);
+			if (!this._spotDetailPointer) {
+				var that = this;
+				setTimeout(function () {
+					var textView = new Text(that.createId("SpotDetailPointer"));
+					var contentId = oMap.getId() + "-geoscene-winlayer";
+					var cont = document.getElementById(contentId);
+					var rm = sap.ui.getCore().createRenderManager();
+					rm.renderControl(textView);
+					rm.flush(cont);
+					rm.destroy();
+					that._spotDetailPointer = textView;
+				}, 1000);
+			}
+
+			this._mapDataLoadingTask.start();
 		},
 
-		onRS: function (evt) {
-			var oModel = this.getView().getModel();
-			var lons = [];
-			var lats = [];
-
-			if (lons.length && lats.length) {
-				if (lons.length == 1 && lats.length == 1) {
-					this.oVBI.zoomToGeoPosition(lons, lats, 5);
-				} else {
-					this.oVBI.zoomToGeoPosition(lons, lats);
-				}
+		onZoomChanged: function (evt) {
+			if (this._oPopover) {
+				this._oPopover.close();
 			}
 		},
 
+		onExit: function () {
+			if (this._oPopover) {
+				this._oPopover.destroy();
+			}
+		},
+
+		getMapControl: function () {
+			return this.getView().byId("vbi");
+		},
+		
 		onFiltersChanged: function (evt) {
 			var oMap = this.getMapControl();
 			var oMapLegend = this.getMapLegend();
@@ -75,15 +116,6 @@ sap.ui.define([
 			}
 		},
 
-		onHideView: function (evt) {
-			this._mapDataLoadingTask.stop();
-		},
-
-		onAfterRendering: function () {
-			BaseController.prototype.onAfterRendering.apply(this, arguments);
-			this._mapDataLoadingTask.start();
-		},
-
 		onSpotClickItem: function (evt) {
 			var that = this;
 			var pos = {};
@@ -97,7 +129,7 @@ sap.ui.define([
 			marker.style.top = pos.y + "px";
 			var oMap = this.getMapControl();
 			if (!that._oPopover) {
-				that._oPopover = sap.ui.xmlfragment("com.epam.ui.view.fragment.requestDetails", that);
+				that._oPopover = sap.ui.xmlfragment("com.epam.uirequests.view.fragment.requestDetails", that);
 				that.getView().addDependent(that._oPopover);
 			}
 			that._oPopover.bindElement({
@@ -109,7 +141,37 @@ sap.ui.define([
 			setTimeout(function () {
 				that._oPopover.openBy(that._spotDetailPointer);
 			}, 1);
-		}
+		},
 
+		getMapLegend: function () {
+			return this.getMapControl().getLegend();
+		},
+
+		onLegendItemClick: function (evt) {
+			var oMap = this.getMapControl();
+			var crmRequest = evt.getSource().getBindingContext("mapData").getProperty();
+			oMap.setCenterPosition(crmRequest.location.replace("; 0", ""));
+			oMap.setZoomlevel(15);
+		},
+
+		createPeriodicalyTask: function (taskToExecute, delay) {
+			var timer;
+			var start = function () {
+				function run() {
+					taskToExecute();
+					timer = setTimeout(run, delay);
+				};
+				timer = setTimeout(run, 1);
+			};
+			return {
+				start: start,
+				stop: function () {
+					if (timer) {
+						clearTimeout(timer);
+						timer = null;
+					}
+				}
+			};
+		}
 	});
 });

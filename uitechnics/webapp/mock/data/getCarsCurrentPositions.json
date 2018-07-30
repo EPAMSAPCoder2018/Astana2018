@@ -1,0 +1,39 @@
+{
+	"results": [{
+		"carId": "54463d412cb4e449",
+		"status": "A",
+		"licPlate": "",
+		"carName": "MAZ",
+		"carModel": "5449",
+		"VIN": "VIN54463d412cb4e449",
+		"avgSpeed": "30.00",
+		"location": "27.633762;53.916788;0"
+	}, {
+		"carId": "2",
+		"status": "A",
+		"licPlate": "",
+		"carName": "MAZ",
+		"carModel": "5449",
+		"VIN": "VIN54463d412cb4e449",
+		"avgSpeed": "30.00",
+		"location": "27.633805;53.905472;0"
+	}, {
+		"carId": "3",
+		"status": "B",
+		"licPlate": "",
+		"carName": "MAZ",
+		"carModel": "5449",
+		"VIN": "VIN54463d412cb4e449",
+		"avgSpeed": "30.00",
+		"location": "27.634979;53.912372;0"
+	}, {
+		"carId": "1",
+		"status": "N",
+		"licPlate": "",
+		"carName": "MAZ",
+		"carModel": "5449",
+		"VIN": "VIN54463d412cb4e449",
+		"avgSpeed": "30.00",
+		"location": "27.584679;53.916326;0"
+	}]
+}

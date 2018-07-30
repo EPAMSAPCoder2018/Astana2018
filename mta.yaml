@@ -39,7 +39,41 @@ modules:
     requires:
       - name: hdi_db
 
-  - name: uiordersdetails
+  - name: uirequests
+    type: html5
+    path: uirequests
+    parameters:
+       disk-quota: 512M
+       memory: 256M
+    build-parameters:
+       builder: grunt
+    requires:
+     - name: uaa_AstanaApp
+     - name: dest_AstanaApp
+     - name: xs_api
+       group: destinations
+       properties:
+          name: xs_api
+          url: '~{url}'
+
+  - name: uitechnics
+    type: html5
+    path: uitechnics
+    parameters:
+       disk-quota: 512M
+       memory: 256M
+    build-parameters:
+       builder: grunt
+    requires:
+     - name: uaa_AstanaApp
+     - name: dest_AstanaApp
+     - name: xs_api
+       group: destinations
+       properties:
+          name: xs_api
+          url: '~{url}'
+          
+ - name: uiordersdetails
     type: html5
     path: uiordersdetails
     parameters:
