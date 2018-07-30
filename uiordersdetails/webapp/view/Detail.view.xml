@@ -1,0 +1,158 @@
+<mvc:View busy="true" busyIndicatorDelay="0" xmlns:semantic="sap.m.semantic" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+	xmlns:core="sap.ui.core" xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:mc="sap.suite.ui.microchart"
+	xmlns:f="sap.ui.layout.form" xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" controllerName="com.epam.uiordersdetails.controller.Detail"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<semantic:DetailPage navButtonPress="onNavBack" showNavButton="{device>/system/phone}" title="{=${i18n>order.title} + ${id}}">
+		<semantic:content>
+			<ObjectHeader intro="{id}" title="{description}">
+				<statuses>
+					<ProgressIndicator displayOnly="true" percentValue="100" displayValue="{state/description}"
+						state="{state/state}"/>
+				</statuses>
+				<ObjectAttribute text="{state/description}" title="{i18n>order.status}"/>
+				<ObjectAttribute text="{distance} м" title="{i18n>order.distance}"/>
+			</ObjectHeader>
+			<IconTabBar class="sapUiResponsiveContentPadding">
+				<items>
+					<IconTabFilter icon="sap-icon://message-information">
+						<content>
+							<Panel class="noPadding" headerText="{i18n>detail.infoTab.processed}" expandable="true" expanded="true">
+								<Table>
+									<columns>
+										<Column demandPopin="true" minScreenWidth="Tablet">
+											<Text text="В целом"/>
+										</Column>
+										<Column demandPopin="true" minScreenWidth="Tablet">
+											<Text text="Снегоочистителем"/>
+										</Column>
+										<Column demandPopin="true" minScreenWidth="Tablet">
+											<Text text="Щетками"/>
+										</Column>
+										<Column demandPopin="true" minScreenWidth="Tablet">
+											<Text text="Солью"/>
+										</Column>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<mc:RadialMicroChart size="L" percentage="64" custom:name="All" valueColor="rgb(0,255,0)" press="onChartClick"/>
+												<mc:RadialMicroChart size="L" percentage="41" custom:name="SNOWPLOW" valueColor="rgb(0,128,255)" press="onChartClick"/>
+												<mc:RadialMicroChart size="L" percentage="31" custom:name="BRUSH" valueColor="rgb(255,128,0)" press="onChartClick"/>
+												<mc:RadialMicroChart size="L" percentage="34" custom:name="SALT_SPREADER" valueColor="rgb(255,0,255)" press="onChartClick"/>
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							</Panel>
+							<Panel class="noPadding" headerText="{i18n>detail.infoTab.stages}" expandable="true" expanded="false">
+								<Table items="{orderModel>/routes/0/routes}" noDataText="{i18n>tableNoDataText}">
+									<columns>
+										<Column width="5em">
+											<Text text="{i18n>detail.infoTab.stage.id}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>detail.infoTab.stage.status}"/>
+										</Column>
+										<Column width="5em">
+											<Text text="{i18n>detail.infoTab.stage.distance}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>detail.infoTab.stage.geoFromName}"/>
+										</Column>
+										<Column>
+											<Text text="{i18n>detail.infoTab.stage.geoToName}"/>
+										</Column>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<Text text="{orderModel>id}"/>
+												<ProgressIndicator displayOnly="true" percentValue="100" displayValue="{orderModel>state/description}"
+													state="{orderModel>state/state}"/>
+												<Text text="{orderModel>distance}м"/>
+												<Text text="{orderModel>geoFromName}"/>
+												<Text text="{orderModel>geoToName}"/>
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+							</Panel>
+						</content>
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://map-2" width="100%" height="500px">
+						<content>
+							<OverflowToolbar>
+								<ToolbarSpacer/>
+								<Text text="Обработано:" class="sapUiSmallMargin"/>
+								<ComboBox items="{routesFiltersModel>/devices}" selectionChange="onDevicesFiltersChanged"
+									selectedKey="{routesFiltersModel>/selectedDeviceKey}">
+									<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
+								</ComboBox>
+								<Text text="Статус:" class="sapUiSmallMargin"/>
+								<ComboBox items="{routesFiltersModel>/items}" selectionChange="onFiltersChanged" selectedKey="{routesFiltersModel>/selectedKey}">
+									<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
+								</ComboBox>
+							</OverflowToolbar>
+							<vbm:GeoMap id="vbi" width="100%" height="450px" initialZoom="12" initialPosition="27.554899;53.904651"
+								vos="{path:'orderModel>/routes', factory:'.vosFactoryFunction'}" zoomChanged="onZoomChanged">
+								<vbm:legend>
+									<vbm:Legend caption="Заказы" items="{ path: 'orderModel>/routes/0/routes', factory: '.legendFactoryFunction'}"></vbm:Legend>
+								</vbm:legend>
+							</vbm:GeoMap>
+						</content>
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://car-rental" width="100%" height="100%">
+						<content>
+							<Table items="{carModel>/results}" noDataText="{i18n>tableNoDataText}">
+								<columns>
+									<Column width="10em">
+										<Text text="{i18n>detail.carsTab.car.id}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>detail.carsTab.car.status}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>detail.carsTab.car.name}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>detail.carsTab.car.model}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>detail.carsTab.car.licPlate}"/>
+									</Column>
+									<Column width="10em">
+										<Text text="{i18n>detail.carsTab.car.vin}"/>
+									</Column>
+									<Column>
+										<Text text="{i18n>detail.carsTab.car.avgSpeed}"/>
+									</Column>
+								</columns>
+								<items>
+									<ColumnListItem>
+										<cells>
+											<Text text="{carModel>id}"/>
+											<ProgressIndicator displayOnly="true" percentValue="100" 
+												displayValue="{carModel>state/description}"
+												state="{carModel>state/state}"/>
+											<Text text="{carModel>name}"/>
+											<Text text="{carModel>model}"/>
+											<Text text="{carModel>licPlate}"/>
+											<Text text="{carModel>VIN}"/>
+											<Text text="{carModel>avgSpeed}"/>
+										</cells>
+									</ColumnListItem>
+								</items>
+							</Table>
+						</content>
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://travel-request" width="100%" height="100%">
+						<content></content>
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://video" width="100%" height="100%">
+						<content></content>
+					</IconTabFilter>
+				</items>
+			</IconTabBar>
+		</semantic:content>
+	</semantic:DetailPage>
+</mvc:View>

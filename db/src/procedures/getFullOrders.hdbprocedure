@@ -1,4 +1,4 @@
-PROCEDURE "getFullStages" (OUT result "tableTypes.OrderInfo")
+PROCEDURE "getFullOrders" (OUT result "tableTypes.OrderInfo")
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    READS SQL DATA AS
@@ -7,6 +7,7 @@ BEGIN
 		ORDERS.*,
 		STAGES."stageId",
 		STAGES."status.status" "stageStatus",
+		STAGES."distance" "stageDistance",
 		STAGES."geoFrom".ST_AsGeoJSON() as "geoFrom", 
 		STAGES."geoFromName",
 		STAGES."geoTo".ST_AsGeoJSON() as "geoTo",
@@ -18,6 +19,7 @@ BEGIN
 			ORDERS."orderId",
 			ORDERS."status.status" "orderStatus",
 			ORDERS."orderDate",
+			ORDERS."distance" "orderDistance",
 			CAR."carId",
 			CAR."status.status" "carStatus",
 			CAR."licPlate",

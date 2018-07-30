@@ -10,6 +10,7 @@ context tableTypes {
         "orderId"   : Integer;
         "orderStatus": String(1);
         "orderDate" : UTCTimestamp;
+        "orderDistance" : Integer;
         "carId"    : String(50);
         "carStatus": String(1);
         "licPlate" : String(7);
@@ -19,6 +20,7 @@ context tableTypes {
         "avgSpeed" : Decimal(5, 2);
         "stageId"     : Integer;
         "stageStatus": String(1);
+        "stageDistance" : Integer;
         "geoFrom"     : String(200);
         "geoFromName" : String(100);
         "geoTo"       :  String(200);
@@ -36,6 +38,7 @@ context tableTypes {
         "geoToName"   : String(100);
         "vectorId"    : Integer;
         "coordinates" : String(5000);
+        "distance" : Integer;
     }
 
 };

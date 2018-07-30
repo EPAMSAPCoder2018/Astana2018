@@ -1,0 +1,14 @@
+{
+  "welcomeFile": "/uiordersdetails/index.html",
+  "authenticationMethod": "route",
+  "logout": {
+    "logoutEndpoint": "/do/logout"
+  },
+  "routes": [
+    {
+      "source": "^/uiordersdetails/(.*)$",
+      "target": "$1",
+      "localDir": "webapp"
+    }
+  ]
+}

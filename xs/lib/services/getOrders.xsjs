@@ -15,13 +15,15 @@ for (var i = 0; i < result.length; i++) {
 		geoFromName: [],
 		geoToName: [],
 		coordinates: [],
-		description: ""
+		description: "",
+		distance : 0
 	};
 
 	order.id = row.orderId;
 	order.status = row.orderStatus;
 	order.createDate = row.orderDate;
 	order.carId = row.carId;
+	order.distance = row.orderDistance;
 	order.coordinates = order.coordinates.concat(JSON.parse(row.coordinates).coordinates.map(function (point) {
 		return point.join(";");
 	}));

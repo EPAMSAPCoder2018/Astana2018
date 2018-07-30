@@ -1,0 +1,20 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic" xmlns="sap.m"
+	controllerName="com.epam.uiordersdetails.controller.Master" xmlns:html="http://www.w3.org/1999/xhtml">
+	<semantic:MasterPage title="{i18n>masterTitle}">
+		<semantic:content>
+			<List id="list" items="{/results}" busyIndicatorDelay="0" growing="true" growingScrollToLoad="true" growingThreshold="10"
+				mode="SingleSelectMaster" selectionChange="onSelect">
+				<items>
+					<ObjectListItem title="{description}" type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}" press="onSelect">
+						<firstStatus>
+							<ObjectStatus state="{= ${status}==='I' ? 'Warning' : (${status}==='D' ? 'Success' : 'None')}" text="{statusDescription}"/>
+						</firstStatus>
+						<attributes>
+							<ObjectAttribute text="{id}"/>
+						</attributes>
+					</ObjectListItem>
+				</items>
+			</List>
+		</semantic:content>
+	</semantic:MasterPage>
+</mvc:View>

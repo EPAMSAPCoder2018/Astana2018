@@ -1,0 +1,32 @@
+<mvc:View controllerName="com.epam.uiorders.controller.routes" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns:core="sap.ui.core"
+	xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:mc="sap.suite.ui.microchart"
+	xmlns:f="sap.ui.layout.form" xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" height="100%" displayBlock="true">
+	<App>
+		<pages>
+			<Page showHeader="true" title="{i18n>orders.title}" enableScrolling="true">
+				<subHeader>
+					<OverflowToolbar>
+						<Text text="{i18n>order.status}" class="sapUiSmallMargin"/>
+						<ComboBox items="{routesFiltersModel>/items}" selectionChange="onFiltersChanged" selectedKey="{routesFiltersModel>/selectedKey}">
+							<core:Item key="{routesFiltersModel>key}" text="{routesFiltersModel>name}"/>
+						</ComboBox>
+						<ToolbarSpacer/>
+					</OverflowToolbar>
+				</subHeader>
+				<content>
+					<vbm:GeoMap id="vbi" width="100%" height="100%" initialZoom="12" initialPosition="27.554899;53.904651"
+						vos="{path:'mapData>/results', factory:'.vosFactoryFunction'}" zoomChanged="onZoomChanged">
+						<vbm:legend>
+							<vbm:Legend caption="{i18n>orders.title}" items="{ path: 'mapData>/results', factory: '.legendFactoryFunction'}"></vbm:Legend>
+						</vbm:legend>
+					</vbm:GeoMap>
+				</content>
+				<footer>
+					<Toolbar>
+						<ToolbarSpacer/>
+					</Toolbar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

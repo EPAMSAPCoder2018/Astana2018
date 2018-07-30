@@ -1,4 +1,4 @@
-PROCEDURE "getFullOrders" (IN orderId Integer, OUT result "tableTypes.StageFullInfo")
+PROCEDURE "getFullStages" (IN orderId Integer, OUT result "tableTypes.StageFullInfo")
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    READS SQL DATA AS
@@ -11,7 +11,8 @@ BEGIN
 		"geoTo".ST_AsGeoJSON() as "geoTo",
 		"geoToName",
 		V."vectorId",
-		V."coordinates".ST_AsGeoJSON() as "coordinates"
+		V."coordinates".ST_AsGeoJSON() as "coordinates",
+		S."distance"
 	FROM "main.Stages" S
 	INNER JOIN "main.Vectors" V ON V."stageId"=S."stageId"
 	WHERE "orderId" = :orderId
