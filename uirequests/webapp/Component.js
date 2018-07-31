@@ -21,7 +21,7 @@ sap.ui.define([
 			
 			var oMockServer = MockServer.getInstance();
 			oMockServer.start();
-			document.title = this.oModels.i18n.getProperty("appTitle");
+			document.title = this.getModel("i18n").getProperty("appTitle");
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 

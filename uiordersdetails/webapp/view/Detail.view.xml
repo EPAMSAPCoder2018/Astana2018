@@ -2,7 +2,7 @@
 	xmlns:core="sap.ui.core" xmlns:custom="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:mc="sap.suite.ui.microchart"
 	xmlns:f="sap.ui.layout.form" xmlns:vbm="sap.ui.vbm" xmlns:l="sap.ui.layout" controllerName="com.epam.uiordersdetails.controller.Detail"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-	<semantic:DetailPage navButtonPress="onNavBack" showNavButton="{device>/system/phone}" title="{=${i18n>order.title} + ${id}}">
+	<semantic:DetailPage navButtonPress="onNavBack" showNavButton="{device>/system/phone}" title="{=${i18n>order.title} + ' ' + ${id}}">
 		<semantic:content>
 			<ObjectHeader intro="{id}" title="{description}">
 				<statuses>

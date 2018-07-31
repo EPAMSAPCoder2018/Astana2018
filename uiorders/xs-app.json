@@ -8,6 +8,9 @@
 		"source": "/services/(.*).xsjs",
 		"destination": "xs_api"
 	}, {
+		"source": "/orders",
+		"destination": "orders_api"
+	},{
 		"source": "^/uiorders/(.*)$",
 		"target": "$1",
 		"localDir": "webapp"

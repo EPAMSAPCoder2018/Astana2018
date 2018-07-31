@@ -72,8 +72,8 @@ modules:
        properties:
           name: xs_api
           url: '~{url}'
-          
- - name: uiordersdetails
+
+  - name: uiordersdetails
     type: html5
     path: uiordersdetails
     parameters:
@@ -81,6 +81,10 @@ modules:
        memory: 256M
     build-parameters:
        builder: grunt
+    provides:
+      - name: orders_api
+        properties:
+          url: '${default-url}'
     requires:
      - name: uaa_AstanaApp
      - name: dest_AstanaApp
@@ -106,6 +110,11 @@ modules:
        properties:
          name: xs_api
          url: '~{url}'
+     - name: orders_api
+       group: destinations
+       properties:
+         name: orders_api
+         url: '~{url}'     
 resources:
   - name: uaa_AstanaApp
     parameters:

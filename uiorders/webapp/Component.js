@@ -3,7 +3,7 @@ sap.ui.define([
 	"sap/ui/Device",
 	"com/epam/uiorders/model/models",
 	"com/epam/uiorders/mock/mockServer"
-], function(UIComponent, Device, models, MockServer) {
+], function (UIComponent, Device, models, MockServer) {
 	"use strict";
 
 	return UIComponent.extend("com.epam.uiorders.Component", {
@@ -17,11 +17,11 @@ sap.ui.define([
 		 * @public
 		 * @override
 		 */
-		init: function() {
-			
+		init: function () {
+
 			var oMockServer = MockServer.getInstance();
 			oMockServer.start();
-							
+			document.title = this.getModel("i18n").getProperty("appTitle");
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 
@@ -30,7 +30,7 @@ sap.ui.define([
 
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
-			
+
 		}
 	});
 });
