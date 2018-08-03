@@ -47,18 +47,18 @@ sap.ui.define([
 					async: false,
 					success: function (data, textStatus, jqXHR) {
 						var statuses = {
-							"Done": "Success",
-							"In process": "Warning",
-							"Open": "Error"
+							"D": "Success",
+							"I": "Warning",
+							"O": "None"
 						};
 						data.result.forEach(function (spot, index) {
 							spot.index = index + 1;
-							spot.status = statuses[spot["requestStatus"]];
+							spot.status = statuses[spot["status"]];
 						});
 						mapDataModel.setProperty("/spots", data.result);
 					},
 					error: function (data, textStatus, jqXHR) {
-						alert("error to post " + textStatus);
+						console.log("Error to post ", textStatus, data, jqXHR);
 					}
 				});
 			}, 5000);

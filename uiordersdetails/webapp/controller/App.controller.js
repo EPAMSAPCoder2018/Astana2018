@@ -43,7 +43,7 @@ sap.ui.define([
 						component.getModel().setData(data);
 					},
 					error: function (data, textStatus, jqXHR) {
-						alert("error to post " + textStatus);
+						console.log("Error to post ", textStatus, data, jqXHR);
 					}
 				});
 			}, 15000);

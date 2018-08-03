@@ -33,7 +33,7 @@ sap.ui.define([
 						MODELS.mapData.setData(data);
 					},
 					error: function (data, textStatus, jqXHR) {
-						alert("error to post " + textStatus);
+						console.log("Error to post ", textStatus, data, jqXHR);
 					}
 				});
 			}, 1000);

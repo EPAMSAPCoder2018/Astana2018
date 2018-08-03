@@ -3,26 +3,28 @@ $.import("config", "properties");
 $.import("utils", "requestUtil");
 $.import("utils", "dbUtil");
 
-
 var connection = $.xs.dbUtil.getConnection();
-var statement = 'SELECT TOP 5 "custName", "custSurName", "phone", "address" FROM "crm.Customers"';
-var customers = connection.executeQuery(statement);
-
-var statement = 'SELECT TOP 5 TO_DATE("requestDate") as "requestDate", "requestStatus" FROM "crm.Requests"';
+var statement =
+	'SELECT ' + 
+		'TO_DATE(REQ."createDate") as "createDate", ' + 
+		'REQ."status", concat(concat(concat(PNT."longtitude", \'; \'), ' + 
+		'PNT."latitude"), \'; 0\') as "location", ' +
+		'CUST."custName", ' + 
+		'CUST."custSurName", ' + 
+		'CUST."phone", ' + 
+		'CUST."address", ' + 
+		'DET."problem", ' + 
+		'DET."description" ' + 
+	'FROM "crm.Requests" REQ ' +
+	'INNER JOIN "crm.Customers" CUST ON REQ."customerId" = CUST."customerId" ' +
+	'INNER JOIN "crm.Details" DET ON REQ."detailsId" = DET."detailId" ' +
+	'INNER JOIN "crm.Points" PNT ON REQ."customerId" = PNT."pointId" ';
 var requests = connection.executeQuery(statement);
-
-var statement = 'SELECT TOP 5 "problem", "description" FROM "crm.Details";
-var details = connection.executeQuery(statement);
-
-//var statement = 'SELECT TOP 5 "longtitude", "latitude" FROM "crm.Points" ORDER BY ROW_NUMBER() OVER (ORDER BY RAND())';
-var statement = 'SELECT TOP 5 concat(concat(concat("longtitude", \'; \'), "latitude"), \'; 0\') as "location" FROM "crm.Points"';
-var points = connection.executeQuery(statement);
-
 var response = [];
 
-for (var i = 0; i < 5; i++) { //result.length
-	var req = Object.assign(requests[i], details[i], customers[i], points[i]);
-	response.push(JSON.parse(JSON.stringify(req)));
+for (var i = 0; i < requests.length; i++) { //result.length
+	var req = requests[i];
+	response.push(req);
 }
 
 $.xs.requestUtil.prepareResponse({

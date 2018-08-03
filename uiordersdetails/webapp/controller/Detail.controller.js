@@ -285,7 +285,7 @@ sap.ui.define([
 						that.MODELS.orderModel.setProperty("/routes/0/routes", data);
 					},
 					error: function (data, textStatus, jqXHR) {
-						alert("error to post " + textStatus);
+						console.log("Error to post ", textStatus, data, jqXHR);
 					}
 				});
 			}, 10000);
@@ -307,7 +307,7 @@ sap.ui.define([
 						}]);
 					},
 					error: function (data, textStatus, jqXHR) {
-						// alert("error to post " + textStatus);
+						console.log("Error to post ", textStatus, data, jqXHR);
 						that.MODELS.orderModel.setProperty("/routes/1/routes", []);
 						that.MODELS.orderModel.setProperty("/routes/2/spots", []);
 					}
@@ -327,7 +327,7 @@ sap.ui.define([
 						that.MODELS.carModel.setData(data);
 					},
 					error: function (data, textStatus, jqXHR) {
-						alert("error to post " + textStatus);
+						console.log("Error to post ", textStatus, data, jqXHR);
 					}
 				});
 			}, 25000);
