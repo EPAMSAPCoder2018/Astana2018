@@ -1,21 +1,12 @@
-PROCEDURE "getFullOrders" (OUT result "tableTypes.OrderInfo")
+PROCEDURE "getFullOrders" (IN orderIds Table("id" INTEGER), OUT result "tableTypes.OrderInfo")
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    READS SQL DATA AS
+   idsCount integer default 0;
 BEGIN
-	result = SELECT 
-		ORDERS.*,
-		STAGES."stageId",
-		STAGES."status.status" "stageStatus",
-		STAGES."distance" "stageDistance",
-		STAGES."geoFrom".ST_AsGeoJSON() as "geoFrom", 
-		STAGES."geoFromName",
-		STAGES."geoTo".ST_AsGeoJSON() as "geoTo",
-		STAGES."geoToName",
-		VECTORS."vectorId",
-		VECTORS."coordinates".ST_AsGeoJSON() as "coordinates"
-	FROM (
-		SELECT 
+	select count("id") into idsCount from :orderIds;
+	IF :idsCount=0 THEN
+		ordersData = SELECT 
 			ORDERS."orderId",
 			ORDERS."status.status" "orderStatus",
 			ORDERS."orderDate",
@@ -29,8 +20,47 @@ BEGIN
 			CAR."avgSpeed"
 		FROM "main.Orders" ORDERS
 		INNER JOIN "main.OrdersToCars" ORDER_TO_CAR ON ORDER_TO_CAR."orderId" = ORDERS."orderId"
+		INNER JOIN "main.Car" CAR ON CAR."carId" = ORDER_TO_CAR."carId";
+	ELSE
+		ordersData = SELECT 
+			ORDERS."orderId",
+			ORDERS."status.status" "orderStatus",
+			ORDERS."orderDate",
+			ORDERS."distance" "orderDistance",
+			CAR."carId",
+			CAR."status.status" "carStatus",
+			CAR."licPlate",
+			CAR."carName",
+			CAR."carModel",
+			CAR."VIN",
+			CAR."avgSpeed"
+		FROM "main.Orders" ORDERS
+		INNER JOIN "main.OrdersToCars" ORDER_TO_CAR ON ORDER_TO_CAR."orderId" = ORDERS."orderId" 
 		INNER JOIN "main.Car" CAR ON CAR."carId" = ORDER_TO_CAR."carId"
-	) ORDERS
+		WHERE ORDERS."orderId" in (select "id" "orderId" from :orderIds);
+	END IF;
+	result = SELECT 
+		ORDERS."orderId",
+		ORDERS."orderStatus",
+		ORDERS."orderDate",
+		ORDERS."orderDistance",
+		ORDERS."carId",
+		ORDERS."carStatus",
+		ORDERS."licPlate",
+		ORDERS."carName",
+		ORDERS."carModel",
+		ORDERS."VIN",
+		ORDERS."avgSpeed",
+		STAGES."stageId",
+		STAGES."status.status" "stageStatus",
+		STAGES."distance" "stageDistance",
+		STAGES."geoFrom".ST_AsGeoJSON() as "geoFrom", 
+		STAGES."geoFromName",
+		STAGES."geoTo".ST_AsGeoJSON() as "geoTo",
+		STAGES."geoToName",
+		VECTORS."vectorId",
+		VECTORS."coordinates".ST_AsGeoJSON() as "coordinates"
+	FROM :ordersData ORDERS
 	LEFT JOIN "main.Stages" STAGES ON STAGES."orderId" = ORDERS."orderId"
 	LEFT JOIN "main.Vectors" VECTORS ON VECTORS."stageId" = STAGES."stageId"
 	ORDER BY STAGES."stageId" ASC;

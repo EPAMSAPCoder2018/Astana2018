@@ -1,59 +1,11 @@
-custName,custSurName,phone,address
-Dorotea,Golston,383-250-2491,812 Waubesa Terrace
-Timmy,Grzeskowski,463-185-1719,8247 2nd Plaza
-Ailene,Childers,370-803-2317,1 2nd Trail
-Genia,MacNess,336-978-9719,8477 Pennsylvania Crossing
-Derrick,Maliffe,502-844-6498,19 Schmedeman Alley
-Isabeau,Dexter,346-747-4831,90 Oneill Place
-Vi,Ganter,280-133-2113,1314 Gale Way
-Jameson,Highwood,507-307-0046,171 Shopko Drive
-Lolita,De la Yglesias,251-703-2953,131 Dorton Plaza
-Celestyn,Croci,163-715-2552,83 Oneill Alley
-Elspeth,Lindenbluth,744-207-6817,94 Cambridge Circle
-Jana,Fauguel,331-185-2601,6257 Thackeray Parkway
-Dyna,Cathrae,926-224-7216,91987 Manitowish Circle
-Wilburt,Pickwell,271-878-6908,99 Hintze Junction
-Itch,Cullity,898-745-5766,18 Artisan Trail
-Fayre,Crother,641-678-8284,96146 Bashford Crossing
-Reynard,Trinke,931-537-4674,2148 Novick Avenue
-Dorelia,Castard,386-220-7353,397 East Center
-Arabel,Ferraresi,741-245-8990,2 Ridgeway Hill
-Herculie,Chrestien,898-447-6390,89 Waxwing Plaza
-Lizzie,Dilliway,235-716-6659,8 Hazelcrest Terrace
-Lucienne,Flintuff,918-718-0222,7 Mesta Avenue
-Moshe,Coope,664-787-5664,78135 Pepper Wood Road
-Hazlett,Kippling,380-134-6513,45 Garrison Park
-Dot,Strangman,693-150-0160,367 Paget Crossing
-Susanne,Spiteri,582-592-9912,9 Hintze Way
-Mel,Braybrook,904-421-0787,1 Northland Court
-Fleur,Yakushkev,808-184-8649,75994 Veith Hill
-Della,Heak,473-593-2624,17581 Schmedeman Street
-Tomkin,Dreinan,800-750-5913,71 Hazelcrest Alley
-Sibelle,Winton,736-891-8425,8613 Heath Lane
-Ddene,Haldin,800-105-5360,97846 Dapin Court
-Julienne,Baddiley,160-981-4381,2862 Superior Terrace
-Shelagh,Antos,223-249-2073,1 Browning Way
-Esmeralda,Caudle,659-449-3903,28895 Amoth Alley
-Lothaire,Tumilty,269-725-9492,815 Erie Point
-Corinna,Wadworth,122-769-1354,35 New Castle Junction
-Roselia,Beatson,866-100-3196,3 Pine View Point
-Ragnar,Woodvine,605-720-2295,693 Waubesa Circle
-Yancey,Whenham,186-445-9477,5 Swallow Plaza
-Tory,O'Fielly,672-972-6941,5678 Corry Terrace
-Pace,Anthonsen,108-991-6879,920 Iowa Crossing
-Emma,Fuge,488-763-1660,27 Bartillon Trail
-Phoebe,Schapero,738-650-7425,37819 Claremont Trail
-Templeton,Erie,196-423-4473,65 Melrose Pass
-Alfie,Campos,742-130-9876,6947 Fairview Drive
-Em,Ohanessian,804-744-7218,2 Westend Drive
-Jori,Gilffilland,115-384-2665,18896 Boyd Plaza
-Electra,Cholton,242-535-1439,5978 Lindbergh Point
-Cecilio,Tarbert,163-534-6545,3 Bashford Way
-Ingelbert,Lillford,319-131-4029,73884 Heffernan Avenue
-Mallorie,Verni,782-328-0452,122 Nancy Terrace
-Mab,Sargood,164-243-7150,1 Upham Lane
-Kamilah,Beardsall,740-740-6348,570 Jenna Circle
-Fraser,Feenan,990-601-4113,96280 Morning Street
-Cordie,Bowen,944-428-3121,6 Anniversary Alley
-Idelle,Nockles,263-859-4785,00456 Service Court
-Janice,Garioch,462-100-6956,657 Riverside Alley
+customerId;custName;custSurName;phone;address
+1;Сергей;Ильин;383-250-2491;пр. Аль-Фараби, д. 77/7
+2;Андрей;Румянцев;463-185-1719;ул. Д. Кунаева 8
+3;Анатолий;Крец;370-803-2317;ул. Сыганак, 24
+4;Юлия;Масленникова;336-978-9719;ул. Бейбитшилик, 33
+5;Ольга;Терехина;502-844-6498;пр. Богенбай батыра, 46
+6;Анастасия;Ждан;346-747-4831;ул. Ж.Жирентаева, 7
+7;Марат;Силиванов;280-133-2113;пр. Б. Момышулы, 10
+8;Константин;Карин;507-307-0046;ул. Достык, 10
+9;Эдуард;Паравой;251-703-2953;ул. Кабанбай батыра, 21
+10;Антон;Асимов;163-715-2552;пр. Туран, 24

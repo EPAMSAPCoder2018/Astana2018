@@ -30,7 +30,7 @@ if (response.body) {
 			delete  car["status.status"];
 			cars.forEach(function(carPosition) {
 				if (car.carId === carPosition.CARID) {
-					car.location = carPosition.C_LATITUDE + ";" + carPosition.C_LONGITUDE + ";0";
+					car.location = carPosition.C_LONGITUDE + ";" + carPosition.C_LATITUDE + ";0";
 				}
 			});
 			response.push(car);

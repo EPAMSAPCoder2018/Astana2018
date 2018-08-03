@@ -4,8 +4,16 @@ $.import("utils", "requestUtil");
 $.import("utils", "dbUtil");
 
 var connection = $.xs.dbUtil.getConnection();
+var orderIds = $.request.parameters.get("orderId") || [];
+if (orderIds && !Array.isArray(orderIds)) {
+	orderIds = [orderIds];
+}
 var getFullOrders = connection.loadProcedure("getFullOrders");
-var result = getFullOrders().RESULT;
+var result = getFullOrders(orderIds.map(function (id) {
+	return {
+		"id" : parseInt(id)
+	};
+})).RESULT;
 var response = {};
 
 for (var i = 0; i < result.length; i++) {
@@ -16,7 +24,7 @@ for (var i = 0; i < result.length; i++) {
 		geoToName: [],
 		coordinates: [],
 		description: "",
-		distance : 0
+		distance: 0
 	};
 
 	order.id = row.orderId;

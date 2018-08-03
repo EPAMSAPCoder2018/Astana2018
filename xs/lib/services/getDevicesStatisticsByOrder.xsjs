@@ -6,11 +6,17 @@ var carId = $.request.parameters.get("carId");
 var orderId = $.request.parameters.get("orderId");
 var url = $.xs.properties.get("iot.apiUrl") + "/getCoordinates.xsjs";
 var request = new $.net.http.Request($.net.http.GET, "/");
-if(carId){
-	request.parameters.push({name:"carId",value:carId});
+if (carId) {
+	request.parameters.push({
+		name: "carId",
+		value: carId
+	});
 }
-if(orderId){
-	request.parameters.push({name:"orderId",value:orderId});
+if (orderId) {
+	request.parameters.push({
+		name: "orderId",
+		value: orderId
+	});
 }
 var client = new $.net.http.Client();
 client.request(request, url);
@@ -32,64 +38,62 @@ if (response.body) {
 		var snowplowName = "SNOWPLOW";
 		var brushName = "BRUSH";
 		var result = {};
-		result[gpsName]	= [];
+		result[gpsName] = [];
 		result[spreaderName] = [];
 		result[snowplowName] = [];
 		result[brushName] = [];
-		response.forEach(function(coordinate){
-			switch(coordinate.OPERATION){
-				case "START":
-					result[coordinate.DEVICETYPE].push(coordinate);
-					break;
-				case "INPROCESS":
-					result[coordinate.DEVICETYPE].push($.xs.dbUtil.clone(coordinate));
-					if(result[spreaderName].length > 0){
-						coordinate.DEVICETYPE = spreaderName;
-						result[spreaderName].push($.xs.dbUtil.clone(coordinate));
+		response.forEach(function (coordinate) {
+			switch (coordinate.OPERATION) {
+			case "START":
+				result[coordinate.DEVICETYPE].push(coordinate);
+				break;
+			case "INPROCESS":
+				result[coordinate.DEVICETYPE].push($.xs.dbUtil.clone(coordinate));
+				if (result[spreaderName].length > 0) {
+					coordinate.DEVICETYPE = spreaderName;
+					result[spreaderName].push($.xs.dbUtil.clone(coordinate));
+				}
+				if (result[snowplowName].length > 0) {
+					coordinate.DEVICETYPE = snowplowName;
+					result[snowplowName].push($.xs.dbUtil.clone(coordinate));
+				}
+				if (result[brushName].length > 0) {
+					coordinate.DEVICETYPE = brushName;
+					result[brushName].push($.xs.dbUtil.clone(coordinate));
+				}
+				break;
+			case "STOP":
+				result[coordinate.DEVICETYPE].push(coordinate);
+				coordinates.push(result[coordinate.DEVICETYPE]);
+				result[coordinate.DEVICETYPE] = [];
+				if (coordinate.DEVICETYPE === gpsName) {
+					if (result[spreaderName].length > 0) {
+						coordinates.push(result[spreaderName]);
 					}
-					if(result[snowplowName].length > 0){
-						coordinate.DEVICETYPE = snowplowName;
-						result[snowplowName].push($.xs.dbUtil.clone(coordinate));
+					if (result[snowplowName].length > 0) {
+						coordinates.push(result[snowplowName]);
 					}
-					if(result[brushName].length > 0){
-						coordinate.DEVICETYPE = brushName;
-						result[brushName].push($.xs.dbUtil.clone(coordinate));
+					if (result[brushName].length > 0) {
+						coordinates.push(result[brushName]);
 					}
-					break;
-				case "STOP":
-					result[coordinate.DEVICETYPE].push(coordinate);
-					coordinates.push(result[coordinate.DEVICETYPE]);
-					result[coordinate.DEVICETYPE] = [];
-					if(coordinate.DEVICETYPE === gpsName){
-						if(result[spreaderName].length > 0){
-							coordinates.push(result[spreaderName]);
-						}
-						if(result[snowplowName].length > 0){
-							coordinates.push(result[snowplowName]);
-						}
-						if(result[brushName].length > 0){
-							coordinates.push(result[brushName]);
-						}
-					}
-					break;
+				}
+				break;
 			}
 		});
-		response = coordinates.map(function(coordinate){
+		response = coordinates.map(function (coordinate) {
 			var resItem = {
-				vector : {
-					coordinates : []
-				}
+				coordinates: []
 			};
-			coordinate.forEach(function(item){
-				resItem.vector.coordinates.push(item.C_LONGITUDE + ";" + item.C_LATITUDE + ";0");
+			coordinate.forEach(function (item) {
+				resItem.coordinates.push(item.C_LONGITUDE + ";" + item.C_LATITUDE + ";0");
 				resItem.orderId = item.C_ORDERID;
 				resItem.carId = item.CARID;
 				resItem.status = item.DEVICETYPE;
 			});
-			resItem.vector.coordinates = resItem.vector.coordinates.join(";");
+			resItem.coordinates = resItem.coordinates.join(";");
 			return resItem;
 		});
-		
+
 	}
 }
 

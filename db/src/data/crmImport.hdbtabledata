@@ -9,18 +9,26 @@
                 "has_header": true,
                 "dialect": "HANA",
 				"type_config": {
-						"delimiter": ","
+					"delimiter": ","
 				}
             },
             "import_settings": {
                 "import_columns": [
-                    "requestDate",
-					"requestStatus"
-                    ]
+                	"requestId",
+                    "createDate",
+					"status",
+					"pointId",
+					"customerId",
+					"detailsId"
+                ]
             },
             "column_mappings": {
-            		"requestDate": 1,
-					"requestStatus": 2
+            	"requestId" : 1,
+    			"createDate" : 2,
+				"status" : 3,
+				"pointId" : 4,
+				"customerId" : 5,
+				"detailsId" : 6
             }
         },
         {
@@ -31,22 +39,24 @@
                 "has_header": true,
                 "dialect": "HANA",
 				"type_config": {
-						"delimiter": ","
+					"delimiter": ";"
 				}
             },
             "import_settings": {
                 "import_columns": [
+                	"customerId",
                     "custName",
 					"custSurName",
 					"phone",
 					"address"
-                    ]
+                ]
             },
             "column_mappings": {
-            		"custName": 1,
-					"custSurName": 2,
-					"phone": 3,
-					"address": 4
+            	"customerId": 1,
+        		"custName": 2,
+				"custSurName": 3,
+				"phone": 4,
+				"address": 5
             }
         },
         {
@@ -57,18 +67,20 @@
                 "has_header": true,
                 "dialect": "HANA",
 				"type_config": {
-						"delimiter": ","
+					"delimiter": ";"
 				}
             },
             "import_settings": {
                 "import_columns": [
+                	"detailId",
                     "problem",
 					"description"
-                    ]
+                ]
             },
             "column_mappings": {
-            		"problem": 1,
-					"description": 2
+            	"detailId": 1,
+        		"problem": 2,
+				"description": 3
             }
         },
         {
@@ -79,18 +91,20 @@
                 "has_header": true,
                 "dialect": "HANA",
 				"type_config": {
-						"delimiter": ","
+					"delimiter": ","
 				}
             },
             "import_settings": {
                 "import_columns": [
+                	"pointId",
                     "longtitude",
 					"latitude"
-                    ]
+                ]
             },
             "column_mappings": {
-            		"longtitude": 2,
-					"latitude": 1
+            	"pointId":1,
+        		"longtitude": 3,
+				"latitude": 2
             }
         }
     ]
