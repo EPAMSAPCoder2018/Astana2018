@@ -100,7 +100,9 @@ function getVectorByStage(stage, client, request) {
 		});
 		data.distance = body.routes[0].legs[0].distance.value;
 		data.geoToName = body.routes[0].legs[0].end_address;
+		data.geoToName = data.geoToName.substr(0, data.geoToName.indexOf(","));
 		data.geoFromName = body.routes[0].legs[0].start_address;
+		data.geoFromName = data.geoFromName.substr(0, data.geoFromName.indexOf(","));
 	}
 	return data;
 }

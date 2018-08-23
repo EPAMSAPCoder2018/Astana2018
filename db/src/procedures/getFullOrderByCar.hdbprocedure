@@ -20,6 +20,7 @@ BEGIN
 			ORDERS."status.status" "orderStatus",
 			ORDERS."orderDate",
 			ORDERS."distance" "orderDistance",
+			ORDERS."details" "orderDetails",
 			CAR."carId",
 			CAR."status.status" "carStatus",
 			CAR."licPlate",

@@ -11,6 +11,7 @@ context tableTypes {
         "orderStatus": String(1);
         "orderDate" : UTCTimestamp;
         "orderDistance" : Integer;
+		"orderDetails": String(5000);
         "carId"    : String(50);
         "carStatus": String(1);
         "licPlate" : String(7);

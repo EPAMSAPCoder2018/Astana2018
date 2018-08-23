@@ -8,6 +8,7 @@ context main {
             status    : association[0..1] to Status { status };
             orderDate : UTCTimestamp;
             distance  : Integer              default 0;
+            details   : String(5000);
     }
     technical configuration {
         column store;

@@ -65,6 +65,7 @@ sap.ui.define([
 			};
 			this.MODELS = {
 				"routesFiltersModel" : Models.createRoutesFiltersModel(),
+				"requestsModel" : Models.createRoutesFiltersModel(),
 				"technicalModel" : Models.createEmptyJSONModel(),
 				"orderModel" : Models.createEmptyJSONModel(),
 				"carModel" : Models.createEmptyJSONModel()
@@ -331,6 +332,23 @@ sap.ui.define([
 					}
 				});
 			}, 25000);
+			this._requestsLoadingTask = this.createPeriodicalyTask(function () {
+				$.ajax({
+					type: "GET",
+					url: "/services/getCustomerRequests.xsjs?orderId=" + orderId,
+					async: false,
+					success: function (data, textStatus, jqXHR) {
+						data.results.forEach(function (car, index) {
+							car.index = index + 1;
+							car.state = that.STATUSES_MAPPING()[car.status];
+						});
+						that.MODELS.carModel.setData(data);
+					},
+					error: function (data, textStatus, jqXHR) {
+						console.log("Error to post ", textStatus, data, jqXHR);
+					}
+				});
+			}, 30000);
 			that._carsLoadingTask.start();
 			that._stagesLoadingTask.start();
 			that._devicesLoadingTask.start();

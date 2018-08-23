@@ -16,13 +16,15 @@
                 "import_columns": [
                 	"orderId",
                     "orderDate",
-                    "status.status"
+                    "status.status",
+                    "details"
                 ]
             },
             "column_mappings": {
             	"orderId": 1,
         		"orderDate": 2,
-                "status.status": 3
+                "status.status": 3,
+                "details" : 4
             }
         },
         {
@@ -105,6 +107,62 @@
                 "orderId" : 2,
                 "carId" : 3,
                 "driverId" : 4
+            }
+        },
+        {
+            "target_table": "main.Car",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "Cars.csv",
+                "has_header": true,
+                "dialect": "HANA",
+				"type_config": {
+					"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "carId",
+            		"status.status",
+            		"businessPartner.bpId",
+            		"licPlate",
+            		"carName",
+            		"carModel",
+            		"VIN",
+            		"avgSpeed"
+            	]
+            },
+            "column_mappings": {
+        		"carId":1,
+        		"status.status":2,
+        		"businessPartner.bpId":3,
+        		"licPlate":4,
+        		"carName":5,
+        		"carModel":6,
+        		"VIN":7,
+        		"avgSpeed":8
+            }
+        },
+        {
+            "target_table": "main.Status",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "Status.csv",
+                "has_header": true,
+                "dialect": "HANA",
+				"type_config": {
+					"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                    "status",
+            		"statusName"
+            	]
+            },
+            "column_mappings": {
+        		"status":1,
+        		"statusName":2
             }
         }
     ]

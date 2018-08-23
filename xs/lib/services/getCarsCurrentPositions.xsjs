@@ -1,8 +1,16 @@
-//services/getCarsCurrentPositions.xsjs?carId=1000000001 
+//services/getCarsCurrentPositions.xsjs?carId=1000000001&orderId=1000006
 $.import("config", "properties");
 $.import("utils", "requestUtil");
 $.import("utils", "dbUtil");
 var carId = $.request.parameters.get("carId");
+var orderId = $.request.parameters.get("orderId");
+if(orderId){
+	var connection = $.xs.dbUtil.getConnection();
+	var statement = 'SELECT "carId" FROM "main.OrdersToCars" WHERE "orderId" = ?';
+	var result = connection.executeQuery(statement, parseInt(orderId, 10));
+	
+	carId = result[0].carId;
+}
 var url = $.xs.properties.get("iot.apiUrl") + "/getCarLocation.xsjs";
 var request = new $.net.http.Request($.net.http.GET, "/");
 if(carId){

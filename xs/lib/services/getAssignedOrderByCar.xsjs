@@ -43,5 +43,7 @@ for(var i=0; i < result.length; i++){
 	};
 	order.stages.push(stage);
 }
-
+if(result.length === 0){
+	order = null;
+}
 $.xs.requestUtil.prepareResponse({result: order});

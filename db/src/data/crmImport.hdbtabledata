@@ -106,6 +106,28 @@
         		"longtitude": 3,
 				"latitude": 2
             }
+        },
+        {
+            "target_table": "crm.RequestsToOrders",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "RequestsToOrders.csv",
+                "has_header": true,
+                "dialect": "HANA",
+				"type_config": {
+					"delimiter": ","
+				}
+            },
+            "import_settings": {
+                "import_columns": [
+                	"orderId",
+                    "requestId"
+                ]
+            },
+            "column_mappings": {
+            	"orderId":1,
+        		"requestId": 2
+            }
         }
     ]
 }

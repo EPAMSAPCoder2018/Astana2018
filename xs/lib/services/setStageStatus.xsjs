@@ -33,9 +33,14 @@ if (response.body) {
 		res.push(body[i]);
 	}
 }
-
-var changeStageStatus = connection.loadProcedure("changeStageStatus");
-var isChanged = changeStageStatus(res[0].C_LATITUDE, res[0].C_LONGITUDE, orderId);
-$.xs.requestUtil.prepareResponse({
-	results: !isChanged.EV_RESULT ? "All the stages are up to date" : (isChanged.EV_RESULT + ' stage(s) updated')
-});
+if(res[0]){
+	var changeStageStatus = connection.loadProcedure("changeStageStatus");
+	var isChanged = changeStageStatus(res[0].C_LONGITUDE, res[0].C_LATITUDE, orderId);
+	$.xs.requestUtil.prepareResponse({
+		results: !isChanged.EV_RESULT ? "All the stages are up to date" : (isChanged.EV_RESULT + ' stage(s) updated')
+	});
+}else{
+	$.xs.requestUtil.prepareResponse({
+		results: "Nothing was updated"
+	});
+}

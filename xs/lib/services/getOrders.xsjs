@@ -32,6 +32,7 @@ for (var i = 0; i < result.length; i++) {
 	order.createDate = row.orderDate;
 	order.carId = row.carId;
 	order.distance = row.orderDistance;
+	order.details = row.orderDetails;
 	order.coordinates = order.coordinates.concat(JSON.parse(row.coordinates).coordinates.map(function (point) {
 		return point.join(";");
 	}));
